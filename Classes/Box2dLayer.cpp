@@ -13,6 +13,7 @@
 #include "b2BodySprite.h"
 #include "GB2ShapeCache-x.h"
 #include "Config.h"
+#include "SuperGlobal.h"
 #define PTM_RATIO 32.0
 USING_NS_ST;
 
@@ -63,6 +64,13 @@ bool Box2dLayer::init(){
         _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
         
         NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::onRecieveEvent), kMoveNotifyEvent, nullptr);
+        NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::addSkipScore), kAddBlockEvent, nullptr);
+        
+        TTFConfig config = TTFConfig("fonts/Marker Felt.ttf", 40,GlyphCollection::DYNAMIC);
+        scoreLabel = Label::createWithTTF(config, convertIntToString(score));
+        scoreLabel->setAnchorPoint(Vec2(1.0, 1.0));
+        scoreLabel->setPosition(STVisibleRect::getPointOfSceneLeftUp() + Vec2(-15, -15));
+        addChild(scoreLabel, 10);
         return true;
     }
     return false;
@@ -175,6 +183,10 @@ void Box2dLayer::onRecieveEvent(cocos2d::Ref *pref) {
     checkNeedAddBodys();
 }
 
+void Box2dLayer::addSkipScore(cocos2d::Ref *pRef) {
+    
+}
+
 void Box2dLayer::addB2Body(){
     float deltax = arc4random() % 10 ;
     deltax = (deltax - 5) * 30;
@@ -196,6 +208,7 @@ void Box2dLayer::addB2Body(){
         pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + deltax - pSprite->getContentSize().width/2.0, obstacleY));
         addChild(pSprite);
         pSprite->addMoveEventNotify();
+        pSprite->setCheckSkip(true);
     }
     {
         Box2dPhysicSprite* pSprite = Box2dPhysicSprite::create("brick2.png");
@@ -294,19 +307,8 @@ void Box2dLayer::BeginContact(b2Contact *contact) {
     //    log("A string is %s", Astring);
     //    log("B string is %s", Bstring);
     if (CompareTwo(__String::create(Astring), __String::create(Bstring), kBrick, kMonster) == true) {
-//        world->SetContactListener(nullptr);
-//        brickSprite->brickDie();
-        
-//        b2Vec2 speedVec = _Brickbody->GetLinearVelocity();
-//        _Brickbody->SetLinearVelocity(b2Vec2(0, 0));
-//        _Brickbody->SetAngularVelocity(0);
-//        JumpNow = false;
-//        float distance = 0.5*(fabs(speedVec.y)*0.5 - 300/PTM_RATIO*0.5*0.5)*PTM_RATIO;//fabs(speedVec.y * 0.5 * PTM_RATIO);
-//        float disx = xForce * 0.25 * 5;
-//        NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent, __String::createWithFormat("%.2f", distance));
-//        brickSprite->runAction(MoveBy::create(0.5, Vec2(disx, 0)));
-//        increaseY += distance;
-//        checkNeedAddBodys();
+        world->SetContactListener(nullptr);
+        brickSprite->brickDie();
     }
 }
 

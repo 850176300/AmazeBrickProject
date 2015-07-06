@@ -63,6 +63,8 @@ public:
     virtual void draw(Renderer *renderer, const Mat4 &transform, uint32_t flags) override;
     
     void addMoveEventNotify();
+    
+    CC_SYNTHESIZE(bool, needCheckSkip, CheckSkip);
 protected:
     void onRecieveEvent(Ref* pRef);
     void checkNeedRemove();
@@ -75,6 +77,8 @@ protected:
     // box2d specific
     b2Body  *_pB2Body;
     float   fPTMRatio;
+    
+    bool hasSendEvent = false;
     
 };
 #endif /* defined(__DND2052_Baby_Play_Town__Box2dPhysicSprite__) */

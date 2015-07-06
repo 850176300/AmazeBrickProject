@@ -12,20 +12,24 @@
 	<dict>
 		<key>B5836C726D1A8E903DA701C4048369461273CFA7</key>
 		<string>https://github.com/850176300/AmazeBrick.git</string>
+		<key>D5235D3F0FAE426630156D7D7A1F81FC6F5100DB</key>
+		<string>https://github.com/850176300/AmazeBrickProject.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>proj.ios_mac/AmazingBrick.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>B5836C726D1A8E903DA701C4048369461273CFA7</key>
+		<string>../../../../AmazeBrick</string>
+		<key>D5235D3F0FAE426630156D7D7A1F81FC6F5100DB</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/850176300/AmazeBrick.git</string>
+	<string>https://github.com/850176300/AmazeBrickProject.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>B5836C726D1A8E903DA701C4048369461273CFA7</string>
+	<string>D5235D3F0FAE426630156D7D7A1F81FC6F5100DB</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -35,6 +39,14 @@
 			<string>B5836C726D1A8E903DA701C4048369461273CFA7</string>
 			<key>IDESourceControlWCCName</key>
 			<string>AmazeBrick</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D5235D3F0FAE426630156D7D7A1F81FC6F5100DB</string>
+			<key>IDESourceControlWCCName</key>
+			<string>AmazeBrickProject</string>
 		</dict>
 	</array>
 </dict>

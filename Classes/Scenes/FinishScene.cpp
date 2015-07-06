@@ -27,7 +27,7 @@ bool FinishScene::init(){
         
         Size frameSize = Director::getInstance()->getOpenGLView()->getFrameSize();
         
-        float deltaHeight = frameSize.height / 960.0 * 100;
+        float deltaHeight = frameSize.height / 960.0 * 40;
         
         gameTitle = new CrippleSprite();
         gameTitle->init(LocalizeString("res/ui/score.png"), 8);

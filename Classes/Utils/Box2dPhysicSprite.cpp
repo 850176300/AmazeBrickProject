@@ -12,6 +12,7 @@ Box2dPhysicSprite::Box2dPhysicSprite()
 : _ignoreBodyRotation(false)
 , _pB2Body(nullptr)
 , fPTMRatio(0.0f)
+, needCheckSkip(false)
 {}
 
 Box2dPhysicSprite::~Box2dPhysicSprite(){
@@ -334,9 +335,16 @@ void Box2dPhysicSprite::onRecieveEvent(cocos2d::Ref *pRef) {
 }
 
 void Box2dPhysicSprite::checkNeedRemove(){
+    Vec2 originPP = Director::getInstance()->getVisibleOrigin();
+    Size glSize = Director::getInstance()->getVisibleSize();
+    if (needCheckSkip == true) {
+        if (getBoundingBox().getMidY() <= originPP.y + glSize.height * 0.6 && hasSendEvent == false) {
+            NotificationCenter::getInstance()->postNotification(kAddBlockEvent);
+            hasSendEvent = true;
+        }
+    }
     if (getBoundingBox().getMaxY() < Director::getInstance()->getVisibleOrigin().y) {
         _pB2Body->GetWorld()->DestroyBody(_pB2Body);
         removeFromParent();
     }
 }
-

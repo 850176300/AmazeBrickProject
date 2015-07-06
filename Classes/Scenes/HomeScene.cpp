@@ -30,7 +30,7 @@ bool HomeScene::init(){
         
         Size frameSize = Director::getInstance()->getOpenGLView()->getFrameSize();
         
-        float deltaHeight = frameSize.height / 960.0 * 120;
+        float deltaHeight = frameSize.height / 960.0 * 40;
         
         gameTitle = new CrippleSprite();
         gameTitle->init(LocalizeString("res/ui/title.png"), 8);

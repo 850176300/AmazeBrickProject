@@ -17,4 +17,5 @@
 #define DropDuration 1.6
 
 #define kMoveNotifyEvent "kMoveNotifyEvent"
+#define kAddBlockEvent "kAddBlockEvent"
 #endif
