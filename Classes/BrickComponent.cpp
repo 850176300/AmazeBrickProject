@@ -67,10 +67,10 @@ void BrickComponent::step(float t) {
     {
         float y = 0;
         if (changeSpeed == true) {
-      
+            as = 19*t*t;
             y += _delta.y * t;
             y += speedY * 0.2;
-            speedY -= 20*0.2f;
+            speedY -= as*0.2f;
 
         }else {
             float frac = fmodf( t , 1.0f );

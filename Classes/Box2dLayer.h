@@ -40,6 +40,8 @@ protected:
     
     void addBrickBody();
     void addB2Body();
+    void addSmallBrick1();
+    void addSmallBrick2();
     void draw(Renderer *renderer, const Mat4 &transform, uint32_t flags);
     void initPhysics();
     void update(float dt);
@@ -68,6 +70,11 @@ private:
     bool JumpNow = false;
     float xForce;
     int score = 0;
+    vector<Color3B> allColors;
+    int addBrickCount = 0;
+    float centerDelta = -1000;
+    Box2dPhysicSprite* smallBrick1 = nullptr;
+    Box2dPhysicSprite* smallBrick2 = nullptr;
 };
 
 #endif /* defined(__com_kekeapp_amazebrick__Box2dLayer__) */

@@ -32,6 +32,7 @@ private:
     Vec2 _previousPos;
     float _height;
     Vec2 _delta;
+    float as = 0;
     float _moveHeight = 0;
     float speedY = 0;
     float _elapsed = 0;

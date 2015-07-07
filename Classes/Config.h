@@ -8,7 +8,9 @@
 
 #ifndef com_kekeapp_amazebrick_Config_h
 #define com_kekeapp_amazebrick_Config_h
-
+//#include <iostream>
+//#include "cocos2d.h"
+//USING_NS_CC;
 #define MoveY 200
 #define MoveX 160
 #define XChange 120
@@ -18,4 +20,6 @@
 
 #define kMoveNotifyEvent "kMoveNotifyEvent"
 #define kAddBlockEvent "kAddBlockEvent"
+
+
 #endif
