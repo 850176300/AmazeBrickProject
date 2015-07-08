@@ -9,6 +9,10 @@
 #include "b2BodySprite.h"
 #include "Config.h"
 
+b2BodySprite::b2BodySprite(){
+    _delegate = nullptr;
+}
+
 b2BodySprite::~b2BodySprite(){
     if (hadAddNotify == true) {
         NotificationCenter::getInstance()->removeObserver(this, kMoveNotifyEvent);
@@ -69,7 +73,7 @@ float b2BodySprite::getPTMRatio() const{
 
 void b2BodySprite::setPosition(const cocos2d::Vec2 &pos) {
     Sprite::setPosition(pos);
-    Vec2 pos11 = pos + Vec2(this->getContentSize().width*(0-this->getAnchorPoint().x), this->getContentSize().height*(0-this->getAnchorPoint().y));
+    Vec2 pos11 = pos + Vec2(this->getContentSize().width*(0.5-this->getAnchorPoint().x), this->getContentSize().height*(0.5-this->getAnchorPoint().y));
     if (_pB2Body != nullptr) {
         _pB2Body->SetTransform(b2Vec2(pos11.x/PTMRatio, pos11.y/PTMRatio),0);
     }
@@ -89,6 +93,31 @@ void b2BodySprite::setPositionWithBool(const cocos2d::Vec2 &pos, bool ignorgAnch
     }
 }
 
+//void b2BodySprite::addMoveEventNotify(){
+//    if (hadAddNotify == true){
+//        return;
+//    }
+//    hadAddNotify = true;
+//    NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(b2BodySprite::onRecieveEvent), kMoveNotifyEvent, nullptr);
+//}
+//
+//void b2BodySprite::onRecieveEvent(cocos2d::Ref *pRef) {
+//    __String* data = dynamic_cast<__String*>(pRef);
+//    float infor = atof(data->getCString());
+//    float distance = infor - (((int)infor) / 1000)*1000;
+//    float dt = (((int)infor) / 1000) * 0.1;
+//    
+//    this->runAction(Sequence::create(EaseSineInOut::create(MoveBy::create(dt, Vec2(0, -distance))), CallFunc::create(std::bind(&b2BodySprite::checkNeedRemove, this)),NULL));
+//}
+//
+//void b2BodySprite::checkNeedRemove(){
+//    if (getBoundingBox().getMaxY() < Director::getInstance()->getVisibleOrigin().y) {
+//        if (_pB2Body != nullptr) {
+//            _pB2Body->GetWorld()->DestroyBody(_pB2Body);
+//        }
+//        removeFromParent();
+//    }
+//}
 void b2BodySprite::addMoveEventNotify(){
     if (hadAddNotify == true){
         return;
@@ -98,6 +127,7 @@ void b2BodySprite::addMoveEventNotify(){
 }
 
 void b2BodySprite::onRecieveEvent(cocos2d::Ref *pRef) {
+    
     __String* data = dynamic_cast<__String*>(pRef);
     float infor = atof(data->getCString());
     float distance = infor - (((int)infor) / 1000)*1000;
@@ -107,13 +137,26 @@ void b2BodySprite::onRecieveEvent(cocos2d::Ref *pRef) {
 }
 
 void b2BodySprite::checkNeedRemove(){
-    if (getBoundingBox().getMaxY() < Director::getInstance()->getVisibleOrigin().y) {
-        if (_pB2Body != nullptr) {
-            _pB2Body->GetWorld()->DestroyBody(_pB2Body);
+    
+    Vec2 originPP = Director::getInstance()->getVisibleOrigin();
+    Size glSize = Director::getInstance()->getVisibleSize();
+    
+    if (firstTimeRecieveMove == true && getBoundingBox().getMidY() < originPP.y + glSize.height * 0.7) {
+        firstTimeRecieveMove = false;
+        if (_delegate != nullptr) {
+            _delegate->onFirstTimeMove(this);
         }
+    }
+    if (needCheckSkip == true) {
+        if (getBoundingBox().getMidY() <= originPP.y + glSize.height * 0.6 && hasSendEvent == false) {
+            NotificationCenter::getInstance()->postNotification(kAddBlockEvent);
+            hasSendEvent = true;
+        }
+    }
+    if (getBoundingBox().getMaxY() < Director::getInstance()->getVisibleOrigin().y) {
+        _pB2Body->GetWorld()->DestroyBody(_pB2Body);
         removeFromParent();
     }
 }
-
 
 

@@ -15,8 +15,16 @@
 using namespace std;
 USING_NS_CC;
 
+class b2BodySprite;
+
+class MoveSpriteDelegate{
+public:
+    virtual void onFirstTimeMove(b2BodySprite* spr) = 0;
+};
+
 class b2BodySprite : public Sprite{
 public:
+    b2BodySprite();
     ~b2BodySprite();
     static b2BodySprite* create(const string& filename);
     static b2BodySprite* createWithTexture(Texture2D* texture);
@@ -30,6 +38,9 @@ public:
     void setPosition(const cocos2d::Vec2 &pos);
     void setPositionWithBool(const cocos2d::Vec2 &pos, bool ignorgAnchorPoint);
     void addMoveEventNotify();
+    
+    CC_SYNTHESIZE(bool, needCheckSkip, CheckSkip);
+    CC_SYNTHESIZE(MoveSpriteDelegate*, _delegate, Delegate);
 protected:
     void onRecieveEvent(cocos2d::Ref *pRef);
     void checkNeedRemove();
@@ -38,7 +49,11 @@ protected:
 private:
     
     b2Body  *_pB2Body = nullptr;
+    
     bool hadAddNotify = false;
+    bool hasSendEvent = false;
+    
+    bool firstTimeRecieveMove = true;
 //    float   _PTMRatio;
 //    float   _PTMRatio;
 };

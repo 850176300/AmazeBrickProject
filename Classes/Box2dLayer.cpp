@@ -14,9 +14,25 @@
 #include "GB2ShapeCache-x.h"
 #include "Config.h"
 #include "SuperGlobal.h"
+#include "BlockComponent.h"
 #define ColorCount 6
 #define PTM_RATIO 32.0
 USING_NS_ST;
+
+
+Box2dLayer::Box2dLayer(){
+//    NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::onRecieveEvent), kMoveNotifyEvent, nullptr);
+    NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::addSkipScore), kAddBlockEvent, nullptr);
+//    NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::addSmallBrick1), kFirstEvent, nullptr);
+//    NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::addSmallBrick2), kSecondEvent, nullptr);
+}
+
+Box2dLayer::~Box2dLayer(){
+//    NotificationCenter::getInstance()->removeObserver(this, kMoveNotifyEvent);
+    NotificationCenter::getInstance()->removeObserver(this, kAddBlockEvent);
+//    NotificationCenter::getInstance()->removeObserver(this, kFirstEvent);
+//    NotificationCenter::getInstance()->removeObserver(this, kSecondEvent);
+}
 
 Scene* Box2dLayer::scene(){
     Scene* pscene = Scene::create();
@@ -33,7 +49,7 @@ Box2dLayer*  Box2dLayer::createWithePhysic(){
     if (pRet && pRet->init()) {
         pRet->initPhysics();
         pRet->scheduleUpdate();
-        pRet->addB2Body();
+        pRet->addB2Body(Vec2::ZERO);
         pRet->addBrickBody();
         pRet->autorelease();
         return pRet;
@@ -66,8 +82,6 @@ bool Box2dLayer::init(){
         
         _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
         
-        NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::onRecieveEvent), kMoveNotifyEvent, nullptr);
-        NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::addSkipScore), kAddBlockEvent, nullptr);
         
         TTFConfig config = TTFConfig("fonts/Marker Felt.ttf", 40,GlyphCollection::DYNAMIC);
         scoreLabel = Label::createWithTTF(config, convertIntToString(score));
@@ -178,32 +192,31 @@ void Box2dLayer::onDraw()
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, oldMV);
 }
 
-void Box2dLayer::onRecieveEvent(cocos2d::Ref *pref) {
-    __String* data = dynamic_cast<__String*>(pref);
-    float infor = atof(data->getCString());
-    float distance = infor - (((int)infor) / 1000)*1000;
-    increaseY += distance;
-    checkNeedAddBodys();
-}
+//void Box2dLayer::onRecieveEvent(cocos2d::Ref *pref) {
+//    __String* data = dynamic_cast<__String*>(pref);
+//    float infor = atof(data->getCString());
+//    float distance = infor - (((int)infor) / 1000)*1000;
+//}
 
 void Box2dLayer::addSkipScore(cocos2d::Ref *pRef) {
     
 }
 
-void Box2dLayer::addB2Body(){
+void Box2dLayer::addB2Body(Vec2 startPos, bool useStartPos /*=false*/){
     if (centerDelta == -1000) {
         float deltax = arc4random() % 10 ;
         centerDelta = (deltax - 5) * 30;
     }
-   
     addBrickCount++;
+    
+    float Posy = useStartPos == false ? obstacleY : startPos.y + 600;
     Color3B brickColor = allColors.at((addBrickCount / 5) % ColorCount);
     {
-        Box2dPhysicSprite* pSprite = Box2dPhysicSprite::create("brick2.png");
+        b2BodySprite* pSprite = b2BodySprite::create("brick2.png");
         b2BodyDef bodyDef;
         bodyDef.type = b2_staticBody;
         bodyDef.userData = (void*)kMonster;
-        bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta - pSprite->getContentSize().width/2.0)/PTM_RATIO, (obstacleY)/PTM_RATIO);
+        bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta - pSprite->getContentSize().width/2.0)/PTM_RATIO, (Posy)/PTM_RATIO);
         b2Body* _body = world->CreateBody(&bodyDef);
         // Define another box shape for our dynamic body.
         GB2ShapeCache::sharedGB2ShapeCache()->addFixturesToBody(_body, "brick2");
@@ -213,17 +226,18 @@ void Box2dLayer::addB2Body(){
         pSprite->setB2Body(_body);
         pSprite->setPTMRatio(PTM_RATIO);
         pSprite->setColor(brickColor);
-        pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta - pSprite->getContentSize().width/2.0, obstacleY));
+        pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta - pSprite->getContentSize().width/2.0, Posy));
         addChild(pSprite);
         pSprite->addMoveEventNotify();
         pSprite->setCheckSkip(true);
+        pSprite->setDelegate(this);
     }
     {
-        Box2dPhysicSprite* pSprite = Box2dPhysicSprite::create("brick2.png");
+        b2BodySprite* pSprite = b2BodySprite::create("brick2.png");
         b2BodyDef bodyDef;
         bodyDef.type = b2_staticBody;
         bodyDef.userData = (void*)kMonster;
-        bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta + 250 + pSprite->getContentSize().width/2.0)/PTM_RATIO, (obstacleY )/PTM_RATIO);
+        bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta + 250 + pSprite->getContentSize().width/2.0)/PTM_RATIO, (Posy )/PTM_RATIO);
         b2Body* _body = world->CreateBody(&bodyDef);
         // Define another box shape for our dynamic body.
 
@@ -233,28 +247,31 @@ void Box2dLayer::addB2Body(){
         _body->SetBullet(true);
         pSprite->setB2Body(_body);
         pSprite->setPTMRatio(PTM_RATIO);
-        pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta + 250 + pSprite->getContentSize().width/2.0, obstacleY));
+        pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta + 250 + pSprite->getContentSize().width/2.0, Posy));
         pSprite->setColor(brickColor);
         addChild(pSprite);
         pSprite->addMoveEventNotify();
+//        pSprite->addComponent(new BlockComponent());
     }
 
     {
-        addSmallBrick1();
-        addSmallBrick2();
+        addSmallBrick1(Posy);
+        addSmallBrick2(Posy);
         
     }
 }
 
-void Box2dLayer::addSmallBrick1(){
+void Box2dLayer::addSmallBrick1(float Posy){
     Color3B brickColor = allColors.at((addBrickCount / 5) % ColorCount);
     
-    float delta = 50 * (arc4random() / 4);
-    Box2dPhysicSprite* pSprite = Box2dPhysicSprite::create("brick3.png");
+    int rand = arc4random() % 8;
+    float delta = 15 * (rand + 4);
+
+    b2BodySprite* pSprite = b2BodySprite::create("brick3.png");
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
     bodyDef.userData = (void*)kMonster;
-    bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta + delta)/PTM_RATIO, (obstacleY + 120 )/PTM_RATIO);
+    bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta + delta)/PTM_RATIO, (Posy +180)/PTM_RATIO);
     b2Body* _body = world->CreateBody(&bodyDef);
     // Define another box shape for our dynamic body.
     
@@ -264,25 +281,27 @@ void Box2dLayer::addSmallBrick1(){
     _body->SetBullet(true);
     pSprite->setB2Body(_body);
     pSprite->setPTMRatio(PTM_RATIO);
-    pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta + delta, obstacleY=120));
+    pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta + delta, Posy+180));
     pSprite->setColor(brickColor);
     addChild(pSprite);
 
-    smallBrick1 = pSprite;
-    smallBrick1->setVisible(false);
+    pSprite->addMoveEventNotify();
+//    smallBrick1 = pSprite;
+//    smallBrick1->setVisible(false);
 }
 
-void Box2dLayer::addSmallBrick2(){
+void Box2dLayer::addSmallBrick2(float Posy){
     float deltax = arc4random() % 10 ;
     centerDelta = (deltax - 5) * 30;
     Color3B brickColor = allColors.at((addBrickCount / 5) % ColorCount);
     
-    float delta = 50 * (arc4random() / 4);
-    Box2dPhysicSprite* pSprite = Box2dPhysicSprite::create("brick3.png");
+    int rand = arc4random() % 8;
+    float delta = 16 * (rand + 4);
+    b2BodySprite* pSprite = b2BodySprite::create("brick3.png");
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
     bodyDef.userData = (void*)kMonster;
-    bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta + delta)/PTM_RATIO, (obstacleY + 120 )/PTM_RATIO);
+    bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta + delta)/PTM_RATIO, (Posy +460)/PTM_RATIO);
     b2Body* _body = world->CreateBody(&bodyDef);
     // Define another box shape for our dynamic body.
     
@@ -292,12 +311,13 @@ void Box2dLayer::addSmallBrick2(){
     _body->SetBullet(true);
     pSprite->setB2Body(_body);
     pSprite->setPTMRatio(PTM_RATIO);
-    pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta + delta, obstacleY=120));
+    pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta + delta, Posy+460));
     pSprite->setColor(brickColor);
     addChild(pSprite);
+    pSprite->addMoveEventNotify();
 
-    smallBrick2 = pSprite;
-    smallBrick2->setVisible(false);
+//    smallBrick2 = pSprite;
+//    smallBrick2->setVisible(false);
 }
 
 void Box2dLayer::addBrickBody(){
@@ -339,42 +359,8 @@ void Box2dLayer::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_even
     
 }
 
-void Box2dLayer::resetGravity(float dt){
-    canTwiceClick = false;
-    //    world->SetGravity(b2Vec2(0, 20));
-    _Brickbody->SetGravityScale(-1.0);
-}
-
-void Box2dLayer::checkNeedPostEvent(float dt){
-    if (brickSprite->getBoundingBox().getMaxY() > centerY) {
-        NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent);
-        unschedule(schedule_selector(Box2dLayer::checkNeedPostEvent));
-        increaseY += 60;
-        checkNeedAddBodys();
-    }
-}
-
-void Box2dLayer::checkNeedAddBodys(){
-    if (increaseY > 100) {
-        if (smallBrick1 != nullptr) {
-            smallBrick1->setVisible(true);
-            smallBrick1->addMoveEventNotify();
-            smallBrick1 = nullptr;
-        }
-    }
-    
-    if (increaseY > 600) {
-        if (smallBrick2 != nullptr) {
-            smallBrick2->setVisible(true);
-            smallBrick2->addMoveEventNotify();
-            smallBrick2 = nullptr;
-        }
-    }
-    if (increaseY > 800) {
-        increaseY = 0;
-        runAction(Sequence::create(DelayTime::create(0.1), CallFunc::create(std::bind(&Box2dLayer::addB2Body, this)), NULL));
-    }
-    
+void Box2dLayer::onFirstTimeMove(b2BodySprite *spr) {
+    addB2Body(spr->getPosition() , true);
 }
 
 void Box2dLayer::BeginContact(b2Contact *contact) {

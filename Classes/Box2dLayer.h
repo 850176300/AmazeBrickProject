@@ -15,6 +15,7 @@
 #include "GLES-Render.h"
 #include "Box2dPhysicSprite.h"
 #include "BrickComponent.h"
+#include "b2BodySprite.h"
 USING_NS_CC;
 using namespace std;
 
@@ -22,8 +23,11 @@ using namespace std;
 #define kBrick "brick"
 #define kEdge "edge"
 #define kMonster "monster"
-class Box2dLayer : public Layer, public b2ContactListener{
+class Box2dLayer : public Layer, public b2ContactListener, public MoveSpriteDelegate{
 public:
+    Box2dLayer();
+    ~Box2dLayer();
+    
     static Scene* scene();
     
     static Box2dLayer* createWithePhysic();
@@ -38,21 +42,19 @@ protected:
     virtual void onTouchEnded(Touch *touch, Event *unused_event);
     virtual void onTouchCancelled(Touch *touch, Event *unused_event){}
     
+    virtual void onFirstTimeMove(b2BodySprite* spr);
     void addBrickBody();
-    void addB2Body();
-    void addSmallBrick1();
-    void addSmallBrick2();
+    void addB2Body(Vec2 startPos, bool useStartPos = false);
+    void addSmallBrick1(float Posy);
+    void addSmallBrick2(float Posy);
     void draw(Renderer *renderer, const Mat4 &transform, uint32_t flags);
     void initPhysics();
     void update(float dt);
     void onDraw();
-    void resetGravity(float);
-    void checkNeedPostEvent(float);
-    void checkNeedAddBodys();
+
     virtual void BeginContact(b2Contact* contact) ;
     virtual void EndContact(b2Contact* contact) ;
     bool CompareTwo(cocos2d::__String *src1, cocos2d::__String *src2, const string &dst1, const string &dst2);
-    void onRecieveEvent(Ref* pref);
     void addSkipScore(Ref* pRef);
 private:
     Label* scoreLabel;
@@ -66,9 +68,6 @@ private:
 //    LayerColor* obstacleLayer = nullptr;//障碍物的页面
     float obstacleY = 0;
     float centerY = 0;
-    float increaseY = 0;
-    bool JumpNow = false;
-    float xForce;
     int score = 0;
     vector<Color3B> allColors;
     int addBrickCount = 0;
