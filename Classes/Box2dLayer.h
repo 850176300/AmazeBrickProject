@@ -56,6 +56,7 @@ protected:
     virtual void EndContact(b2Contact* contact) ;
     bool CompareTwo(cocos2d::__String *src1, cocos2d::__String *src2, const string &dst1, const string &dst2);
     void addSkipScore(Ref* pRef);
+    void onGameOver(Ref* pref);
 private:
     Label* scoreLabel;
     b2World* world;
@@ -74,6 +75,7 @@ private:
     float centerDelta = -1000;
     Box2dPhysicSprite* smallBrick1 = nullptr;
     Box2dPhysicSprite* smallBrick2 = nullptr;
+    Sprite* tipSprite = nullptr;
 };
 
 #endif /* defined(__com_kekeapp_amazebrick__Box2dLayer__) */

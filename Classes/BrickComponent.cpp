@@ -62,12 +62,14 @@ void BrickComponent::update(float t){
     
 }
 
+
+
 void BrickComponent::step(float t) {
     if (startMove == true)
     {
         float y = 0;
         if (changeSpeed == true) {
-            as = 19*t*t;
+            as = 25*t*t;
             y += _delta.y * t;
             y += speedY * 0.2;
             speedY -= as*0.2f;
@@ -95,8 +97,13 @@ void BrickComponent::step(float t) {
             newPos.y = currentPos.y + y;
         }
         if (fabs(fabs(y) - fabs(_height)) < 0.1) {
-//            log("the position is Heightest!!");
+            log("the position is Heightest!!");
             changeSpeed = true;
+            if (needSendEvent == true && _data != nullptr) {
+//                static int count = 0;
+//                log("need Send Event !!, count : %d", count++);
+                NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent, _data);
+            }
         }
         
         if (newPos.x <= Director::getInstance()->getVisibleOrigin().x + parent->getContentSize().width / 2.0) {
@@ -111,12 +118,14 @@ void BrickComponent::step(float t) {
         _previousPos = newPos;
         if (parent->boundingBox().getMinY() < Director::getInstance()->getVisibleOrigin().y) {
             parent->brickDie();
-            
+        
         }
     }
 }
 
 void BrickComponent::touchLAction(){
+    needSendEvent = false;
+    CC_SAFE_RELEASE_NULL(_data);
     float dt;
     float movedis;
     Vec2 startPos = parent->getPosition();
@@ -130,6 +139,7 @@ void BrickComponent::touchLAction(){
         movedis = MoveY - y;
         _durantion = MoveDuration*(y / MoveY);
         x = x*(y / MoveY);
+        movedis = (1.0 - y / MoveY) * MoveDelta;
         dt = MoveDuration - _durantion;
         if (_durantion < SecondTime) {
             _durantion = SecondTime;
@@ -140,8 +150,15 @@ void BrickComponent::touchLAction(){
             x = -XChange;
         }
         int tempT = (int)(dt*10);
-        __String* data = __String::createWithFormat("%.2f", tempT*1000+movedis);
-        NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent, data);
+        if (fabs(deltay) < 5) {
+            needSendEvent = false;
+            NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent, __String::createWithFormat("%.2f", tempT*1000+movedis));
+        }else {
+            needSendEvent = true;
+            _data = __String::createWithFormat("%.2f", tempT*1000+movedis);
+            _data->retain();
+        }
+        
     }
 
     if (deltaX > -1 * MoveX) {
@@ -159,6 +176,8 @@ void BrickComponent::touchLAction(){
 }
 
 void BrickComponent::touchRAction(){
+    needSendEvent = false;
+    CC_SAFE_RELEASE_NULL(_data);
     float dt;
     float movedis;
     Vec2 startPos = parent->getPosition();
@@ -172,7 +191,8 @@ void BrickComponent::touchRAction(){
         movedis = MoveY - y;
         _durantion = MoveDuration*(y / MoveY);
         dt = MoveDuration - _durantion;
-         x = x*(y / MoveY);
+        x = x*(y / MoveY);
+        movedis = (1.0 - y / MoveY) * MoveDelta;
         if (_durantion < SecondTime) {
             _durantion = SecondTime;
             dt = _durantion;
@@ -182,8 +202,14 @@ void BrickComponent::touchRAction(){
             x = XChange;
         }
         int tempT = (int)(dt*10);
-        __String* data = __String::createWithFormat("%.2f", tempT*1000+movedis);
-        NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent, data);
+        if (fabs(deltay) < 5) {
+            needSendEvent = false;
+            NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent, __String::createWithFormat("%.2f", tempT*1000+movedis));
+        }else {
+            needSendEvent = true;
+            _data = __String::createWithFormat("%.2f", tempT*1000+movedis);
+            _data->retain();
+        }
     }
     
     if (deltaX < MoveX) {

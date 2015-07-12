@@ -30,7 +30,7 @@ bool HomeScene::init(){
         
         Size frameSize = Director::getInstance()->getOpenGLView()->getFrameSize();
         
-        float deltaHeight = frameSize.height / 960.0 * 40;
+        float deltaHeight = STVisibleRect::getGlvisibleSize().width * 0.18;
         
         gameTitle = new CrippleSprite();
         gameTitle->init(LocalizeString("res/ui/title.png"), 8);
@@ -81,6 +81,7 @@ bool HomeScene::init(){
         
         _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
         touchListener = listener;
+        GameLayerBase::setShowAds(true);
         return true;
     }
     return false;

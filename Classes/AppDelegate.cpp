@@ -53,7 +53,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     GB2ShapeCache::sharedGB2ShapeCache()->addShapesWithFile("BrickShape.plist");
     // create a scene. it's an autorelease object
     
-    replaceTheScene<FinishScene>();
+    replaceTheScene<LoadingScene>();
    
     
 

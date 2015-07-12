@@ -11,6 +11,7 @@
 
 b2BodySprite::b2BodySprite(){
     _delegate = nullptr;
+    needCheckSkip = false;
 }
 
 b2BodySprite::~b2BodySprite(){
@@ -133,6 +134,8 @@ void b2BodySprite::onRecieveEvent(cocos2d::Ref *pRef) {
     float distance = infor - (((int)infor) / 1000)*1000;
     float dt = (((int)infor) / 1000) * 0.1;
     
+//    log("the distance is %.2f", distance);
+    
     this->runAction(Sequence::create(EaseSineInOut::create(MoveBy::create(dt, Vec2(0, -distance))), CallFunc::create(std::bind(&b2BodySprite::checkNeedRemove, this)),NULL));
 }
 
@@ -147,10 +150,11 @@ void b2BodySprite::checkNeedRemove(){
             _delegate->onFirstTimeMove(this);
         }
     }
-    if (needCheckSkip == true) {
+    if (needCheckSkip == true && hasSendEvent == false) {
         if (getBoundingBox().getMidY() <= originPP.y + glSize.height * 0.6 && hasSendEvent == false) {
             NotificationCenter::getInstance()->postNotification(kAddBlockEvent);
             hasSendEvent = true;
+            needCheckSkip = false;
         }
     }
     if (getBoundingBox().getMaxY() < Director::getInstance()->getVisibleOrigin().y) {

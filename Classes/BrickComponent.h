@@ -39,6 +39,8 @@ private:
     float _durantion = 0;
     bool startMove = false;
     bool changeSpeed = false;
+    bool needSendEvent = false;
+    __String* _data = nullptr;
     
 };
 

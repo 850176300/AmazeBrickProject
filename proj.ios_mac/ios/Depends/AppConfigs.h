@@ -8,14 +8,14 @@
 
 /*************************** MoPub账号设置 **************************/
 
-#define IPHONE_BANNER_ID         @"1db5b603cbf64f82a511db7952c48ea4"
-#define IPHONE_FULLSCREEN_ID     @"9463d7b42d5d42d1bcbcbe2cc8690a7d"
+#define IPHONE_BANNER_ID         @"44a242033046450991074d4bbfcefbd0"
+#define IPHONE_FULLSCREEN_ID     @"ac616a24c5284505a29793aa6e5e4085"
 
-#define IPAD_BANNER_ID           @"d7288f9977fb494ab9892d9434550313"
-#define IPAD_FULLSCREEN_ID       @"3229f1120fef42519b6961daeea89a52"
+#define IPAD_BANNER_ID           @"a050c1937e3a40288907c3fe6ee4d136"
+#define IPAD_FULLSCREEN_ID       @"6fefdd66a2884e7a863d753713b0a08b"
 
-#define IPHONE_FULLSCREEN_ID_CROSSPROMO   @"6d5e6d383ad4481ba8f804a1bc246ee9"
-#define IPAD_FULLSCREEN_ID_CROSSPROMO     @"a45ee4ad192344a5b6af9dd8595354e3"
+#define IPHONE_FULLSCREEN_ID_CROSSPROMO   @""
+#define IPAD_FULLSCREEN_ID_CROSSPROMO     @""
 // 方块广告，如果不需要支持可以留空
 #define IPHONE_MEDIUM_RECT_ID    @""
 #define IPAD_MEDIUM_RECT_ID      @""
@@ -26,7 +26,7 @@
 
 /*************************** Flurry账号 ****************************/
 // 如果留空不设置，那么表示不支持Flurry
-#define FLURRY_KEY               @"5BBV2PDGJWZXZYBVS2BG"
+#define FLURRY_KEY               @"DZMR692CH3J6JYPJNP4R"
 
 /*************************** Privacy Page设置 ****************************/
 // 如果留空默认为http://www.xxx.com/privacy.html, 其中xxx为bundle id中间部分

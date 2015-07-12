@@ -82,14 +82,12 @@ void GameLayerBase::onEnter(){
     KeypadBaseLayer::onEnter();
     if (isShowAds) {
 //        if (PurchaseManager::getInstance()->getRemoveAd() == false) {
-//            STAds ads;
-//            ads.requestAds();
-//            ads.setAdsVisibility(true);
+            STAds ads;
+            ads.requestAds();
+
 //        }
     }else {
 //        if (PurchaseManager::getInstance()->getRemoveAd() == false) {
-//            STAds ads;
-//            ads.setAdsVisibility(false);
 //        }
     }
 }

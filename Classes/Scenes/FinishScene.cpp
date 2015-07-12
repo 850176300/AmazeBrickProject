@@ -9,6 +9,8 @@
 #include "SuperGlobal.h"
 #include "CocosHelper.h"
 #include "SoundPlayer.h"
+#include "Config.h"
+#include "STAds.h"
 
 
 Scene* FinishScene::scene(){
@@ -35,10 +37,19 @@ bool FinishScene::init(){
         gameTitle->scheduleUpdate();
         addChild(gameTitle);
         
+        int highestScore = CCUserDefault::getInstance()->getIntegerForKey(kHighestScore, 0);
+        int currentScore = CCUserDefault::getInstance()->getIntegerForKey(kCurrentScore, 0);
+        
         TTFConfig config = TTFConfig("fonts/Marker Felt.ttf", 40,GlyphCollection::DYNAMIC);
-        Label* label1 = Label::createWithTTF(config, "3233");
-        label1->setPosition(Vec2(50, 50));
+        Label* label1 = Label::createWithTTF(config, convertIntToString(currentScore));
+        label1->setPosition(Vec2(263, 229));
+        label1->setTextColor(Color4B(0, 0, 0, 255));
         gameTitle->addChild(label1);
+        
+        Label* label2 = Label::createWithTTF(config, convertIntToString(highestScore));
+        label2->setPosition(Vec2(263, 76));
+        label2->setTextColor(Color4B(0, 0, 0, 255));
+        gameTitle->addChild(label2);
         
         Sprite* smallTitle = Sprite::create(LocalizeString("res/ui/end.png"));
         smallTitle->setAnchorPoint(Vec2(0.5, 0));
@@ -87,9 +98,26 @@ bool FinishScene::init(){
         
         _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
         touchListener = listener;
+        GameLayerBase::setShowAds(true);
         return true;
     }
     return false;
+}
+
+void FinishScene::onEnterTransitionDidFinish(){
+    GameLayerBase::onEnterTransitionDidFinish();
+    int waitCount = UserDefault::getInstance()->getIntegerForKey("AdWaitingCount", 0);
+    int rand = arc4random() % 2 + 4;
+    if (rand == waitCount) {
+        UserDefault::getInstance()->setIntegerForKey("AdWaitingCount", 0);
+        UserDefault::getInstance()->flush();
+        STAds ads;
+        ads.showInterstitial();
+    }else {
+        waitCount++;
+        UserDefault::getInstance()->setIntegerForKey("AdWaitingCount", waitCount);
+        UserDefault::getInstance()->flush();
+    }
 }
 
 bool FinishScene::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *unused_event) {

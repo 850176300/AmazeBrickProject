@@ -14,12 +14,15 @@
 #define MoveY 200
 #define MoveX 160
 #define XChange 120
+#define MoveDelta 180
 #define SecondTime 0.5
 #define MoveDuration 0.7
 #define DropDuration 1.6
 
 #define kMoveNotifyEvent "kMoveNotifyEvent"
 #define kAddBlockEvent "kAddBlockEvent"
+#define kHighestScore "kHighestScore"
+#define kCurrentScore "kCurrentScore"
 
 
 #endif

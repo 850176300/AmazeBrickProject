@@ -64,5 +64,8 @@ void BrickSprite::tapRSide(){
 void BrickSprite::brickDie(){
     statue = kDie;
     unscheduleUpdate();
-    runAction(EaseSineIn::create(MoveBy::create(0.5, Vec2(0, -1000))));
+    runAction(Sequence::create(EaseSineIn::create(MoveBy::create(0.5, Vec2(0, -1000))), CallFunc::create([=]{
+        NotificationCenter::getInstance()->postNotification(kBrickDieEvent);
+        
+    }), NULL));
 }

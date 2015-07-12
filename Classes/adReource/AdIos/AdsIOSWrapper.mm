@@ -9,8 +9,6 @@
 #import "AdsIOSWrapper.h"
 #import "AppController.h"
 #import "RootViewController.h"
-#include "SimpleAudioEngine.h"
-#import "AnalysisManager.h"
 #import "AdsPopupManager.h"
 
 
@@ -54,7 +52,6 @@ static AdsIOSManager *s_instance = nil;
         [[AdsPopupManager sharedManager] preloadAllAds];
         [[AdsPopupManager sharedManager] setDelegate:self];
         [[AdsPopupManager sharedManager] setBannerAdPosition:BannerAdPositionBottom];
-        [[AnalysisManager sharedManager] startSession];
         
         _couldShowCross = false;
     }

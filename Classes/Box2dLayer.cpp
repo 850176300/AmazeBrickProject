@@ -15,6 +15,7 @@
 #include "Config.h"
 #include "SuperGlobal.h"
 #include "BlockComponent.h"
+#include "STAds.h"
 #define ColorCount 6
 #define PTM_RATIO 32.0
 USING_NS_ST;
@@ -23,14 +24,14 @@ USING_NS_ST;
 Box2dLayer::Box2dLayer(){
 //    NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::onRecieveEvent), kMoveNotifyEvent, nullptr);
     NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::addSkipScore), kAddBlockEvent, nullptr);
-//    NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::addSmallBrick1), kFirstEvent, nullptr);
+    NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::onGameOver), kBrickDieEvent, nullptr);
 //    NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::addSmallBrick2), kSecondEvent, nullptr);
 }
 
 Box2dLayer::~Box2dLayer(){
 //    NotificationCenter::getInstance()->removeObserver(this, kMoveNotifyEvent);
     NotificationCenter::getInstance()->removeObserver(this, kAddBlockEvent);
-//    NotificationCenter::getInstance()->removeObserver(this, kFirstEvent);
+    NotificationCenter::getInstance()->removeObserver(this, kBrickDieEvent);
 //    NotificationCenter::getInstance()->removeObserver(this, kSecondEvent);
 }
 
@@ -61,9 +62,16 @@ Box2dLayer*  Box2dLayer::createWithePhysic(){
 
 bool Box2dLayer::init(){
     if (Layer::init()) {
-        allColors = {Color3B(20, 44, 919), Color3B(200, 30, 150), Color3B(190, 52, 232), Color3B(232, 250, 32), Color3B(45, 98, 120), Color3B(245, 58, 120)};
+        
+        allColors = {Color3B(238, 143, 102),
+            Color3B(168, 102, 238),
+            Color3B(102, 161, 238),
+            Color3B(110, 214, 124),
+            Color3B(217, 189, 111),
+            Color3B(213, 159, 128)};
         
         Sprite* bg = Sprite::create("bg.png");
+        bg->setScale(STVisibleRect::getRealDesignScale());
         bg->setPosition(STVisibleRect::getCenterOfScene());
         addChild(bg);
         
@@ -86,8 +94,14 @@ bool Box2dLayer::init(){
         TTFConfig config = TTFConfig("fonts/Marker Felt.ttf", 40,GlyphCollection::DYNAMIC);
         scoreLabel = Label::createWithTTF(config, convertIntToString(score));
         scoreLabel->setAnchorPoint(Vec2(1.0, 1.0));
-        scoreLabel->setPosition(STVisibleRect::getPointOfSceneLeftUp() + Vec2(-15, -15));
+        scoreLabel->setPosition(STVisibleRect::getPointOfSceneRightUp() + Vec2(-15, -15));
+        scoreLabel->setTextColor(Color4B(0, 50, 50, 255));
         addChild(scoreLabel, 10);
+        
+        
+        
+        STAds ads;
+        ads.requestAds();
         return true;
     }
     return false;
@@ -199,7 +213,8 @@ void Box2dLayer::onDraw()
 //}
 
 void Box2dLayer::addSkipScore(cocos2d::Ref *pRef) {
-    
+    score++;
+    scoreLabel->setString(convertIntToString(score));
 }
 
 void Box2dLayer::addB2Body(Vec2 startPos, bool useStartPos /*=false*/){
@@ -343,9 +358,25 @@ void Box2dLayer::addBrickBody(){
     brickSprite->addComponent(new BrickComponent());
     addChild(brickSprite);
     brickSprite->scheduleUpdate();
+    
+    tipSprite = Sprite::create("res/ui/tip.png");
+    tipSprite->setAnchorPoint(Vec2(0.5, 0));
+    tipSprite->setPosition(STVisibleRect::getCenterOfScene().x, STVisibleRect::getCenterOfScene().y - 50 + 32);
+    addChild(tipSprite, 12);
+    
+    Sprite* start = Sprite::create(LocalizeString("res/ui/start.png"));
+    start->setPosition(Vec2(tipSprite->getContentSize().width / 2.0, -130));
+    tipSprite->addChild(start);
+    
 }
 
 bool Box2dLayer::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *unused_event) {
+    if (tipSprite != nullptr) {
+        tipSprite->runAction(Sequence::create(EaseSineInOut::create(FadeOut::create(0.2f)), CallFunc::create([=]{
+            tipSprite->removeFromParent();
+            tipSprite = nullptr;
+        }), NULL));
+    }
     if (touch->getLocation().x > Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().width / 2.0) {
         brickSprite->tapRSide();
     }else {
@@ -379,6 +410,17 @@ void Box2dLayer::BeginContact(b2Contact *contact) {
 
 void Box2dLayer::EndContact(b2Contact *contact) {
     
+}
+
+void Box2dLayer::onGameOver(cocos2d::Ref *pref) {
+    int highestScore = CCUserDefault::getInstance()->getIntegerForKey(kHighestScore, 0);
+    if (score > highestScore) {
+        CCUserDefault::getInstance()->setIntegerForKey(kHighestScore, score);
+        CCUserDefault::getInstance()->flush();
+    }
+    CCUserDefault::getInstance()->setIntegerForKey(kCurrentScore, score);
+    CCUserDefault::getInstance()->flush();
+    replaceTheScene<FinishScene>();
 }
 
 

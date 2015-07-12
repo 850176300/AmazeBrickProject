@@ -35,6 +35,8 @@ public:
     virtual bool init();
     
 protected:
+    virtual void onEnterTransitionDidFinish();
+    
     void onButtonsClicked(Ref* pRef);
     virtual bool onTouchBegan(Touch *touch, Event *unused_event);
     virtual void onTouchMoved(Touch *touch, Event *unused_event);
