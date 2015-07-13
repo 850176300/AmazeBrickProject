@@ -38,7 +38,7 @@ public:
     
     CC_SYNTHESIZE(BrickStatues, statue, Statues);
     
-    void resume(float dt);
+    void scheduleSelector(float dt);
     
     void brickDie();
     

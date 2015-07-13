@@ -86,6 +86,7 @@ enum ALLItemOrder{
 #define UnlockallIAP string("net.babyandmommy.ponyoutdoor.unlockall")
 
 
+#define BackGroundEvent "BackGroundEvent"
 #define PURCHASESUCCEED "PurchaseSucceed"
 
 #define kUnlockModel1 "eric"

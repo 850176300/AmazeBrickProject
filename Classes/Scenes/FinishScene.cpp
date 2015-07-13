@@ -11,7 +11,7 @@
 #include "SoundPlayer.h"
 #include "Config.h"
 #include "STAds.h"
-
+#include "LeaderboardAdaptor.h"
 
 Scene* FinishScene::scene(){
     Scene* pScene = Scene::create();
@@ -40,7 +40,7 @@ bool FinishScene::init(){
         int highestScore = CCUserDefault::getInstance()->getIntegerForKey(kHighestScore, 0);
         int currentScore = CCUserDefault::getInstance()->getIntegerForKey(kCurrentScore, 0);
         
-        TTFConfig config = TTFConfig("fonts/Marker Felt.ttf", 40,GlyphCollection::DYNAMIC);
+        TTFConfig config = TTFConfig(FONT_NAME, 40,GlyphCollection::DYNAMIC);
         Label* label1 = Label::createWithTTF(config, convertIntToString(currentScore));
         label1->setPosition(Vec2(263, 229));
         label1->setTextColor(Color4B(0, 0, 0, 255));
@@ -139,6 +139,7 @@ void FinishScene::onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *unused_eve
 
 void FinishScene::onButtonsClicked(cocos2d::Ref *pRef) {
     MenuItemSprite* pNode = dynamic_cast<MenuItemSprite*>(pRef);
+    SoundPlayer::getInstance()->playCommonEffect("sound/click.wav");
     switch (pNode->getTag()) {
         case kPlayBtn:
         {
@@ -161,7 +162,7 @@ void FinishScene::onButtonsClicked(cocos2d::Ref *pRef) {
             break;
         case kRankBtn:
         {
-            
+            LeaderboardAdaptor::showLeaderboard();
         }
             break;
         case kHomeBtn:

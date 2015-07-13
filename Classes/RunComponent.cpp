@@ -32,7 +32,7 @@ void RunComponent::update(float dt) {
         firstTimeOver = true;
         totalTime = 1.0f;
         timeOver = totalTime / 2.0;
-        _parent->unschedule(schedule_selector(BrickSprite::resume));
+        _parent->unschedule(schedule_selector(BrickSprite::scheduleSelector));
 //        log("the total time is %.2f", totalTime);
     }else if (_parent->getStatues() == BrickSprite::kTouchR){
         _parent->setStatues(BrickSprite::kIdle);
@@ -47,7 +47,7 @@ void RunComponent::update(float dt) {
         totalTime = 1.0f;
         timeOver = totalTime / 2.0;
 //        log("the total time is %.2f", totalTime);
-        _parent->unschedule(schedule_selector(BrickSprite::resume));
+        _parent->unschedule(schedule_selector(BrickSprite::scheduleSelector));
     }else if (_parent->getStatues() == BrickSprite::kDie){
         return;
     }else if (_parent->getStatues() == BrickSprite::kTapEnded) {
@@ -56,10 +56,11 @@ void RunComponent::update(float dt) {
             _direction = kJump;
 //        }else {
 //            _elapsed = timeOver;
-//            _direction = kDown;
+//            _direction = kNone;
 //        }
 
          _parent->setStatues(BrickSprite::kIdle);
+        return;
     }
     if (_parent->getStatues() == BrickSprite::kIdle) {
         _elapsed += dt;
@@ -92,15 +93,16 @@ void RunComponent::step(float t) {
                     timeOver = totalTime - t;
                     deltat = totalTime - t * 2;
                     stringstream ss("");
-                    __String* _data = __String::createWithFormat("%.2f", deltat > 0.5 ? 0.5f : deltat);
-//                    log("the time over  is %s", _data->getCString());
-                    _parent->scheduleOnce(schedule_selector(BrickSprite::resume), deltat > 0.5 ? 0.5f : deltat);
-//                    log("the data timer is %s, %.2f, and total time is %.2f", _data->getCString(), timeOver, totalTime);
+                    __String* _data = __String::createWithFormat("%.2f", deltat > 0.5 ? 0.5f : deltat+0.1);
+                    if (deltat > 0.5) {
+                        _parent->scheduleOnce(schedule_selector(BrickSprite::scheduleSelector), deltat > 0.5 ? 0.5f : deltat);
+                    }
                     __String* distance = __String::createWithFormat("%.2f", (MoveY - y));
                     ss<<_data->getCString()<<","<<distance->getCString();
                     NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent, __String::create(ss.str()));
                 }
             }
+            log("the y Value is %.2f", y);
            
         }
             break;
@@ -137,7 +139,7 @@ void RunComponent::step(float t) {
     }
     
     _parent->setPosition(newPos);
-     log("the y Value is %.2f", newPos.y);
+    
     _previousPos = newPos;
     if (_parent->boundingBox().getMinY() < Director::getInstance()->getVisibleOrigin().y) {
         _parent->brickDie();

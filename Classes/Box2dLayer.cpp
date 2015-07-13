@@ -8,7 +8,7 @@
 
 #include "Box2dLayer.h"
 #include "VisibleRect.h"
-
+#include "CocosHelper.h"
 #include "STVisibleRect.h"
 #include "b2BodySprite.h"
 #include "GB2ShapeCache-x.h"
@@ -16,6 +16,7 @@
 #include "SuperGlobal.h"
 #include "BlockComponent.h"
 #include "STAds.h"
+#include "LeaderboardAdaptor.h"
 #define ColorCount 6
 #define PTM_RATIO 32.0
 USING_NS_ST;
@@ -25,6 +26,7 @@ Box2dLayer::Box2dLayer(){
 //    NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::onRecieveEvent), kMoveNotifyEvent, nullptr);
     NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::addSkipScore), kAddBlockEvent, nullptr);
     NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::onGameOver), kBrickDieEvent, nullptr);
+    NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::addPauseLayer), BackGroundEvent, nullptr);
 //    NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Box2dLayer::addSmallBrick2), kSecondEvent, nullptr);
 }
 
@@ -32,6 +34,7 @@ Box2dLayer::~Box2dLayer(){
 //    NotificationCenter::getInstance()->removeObserver(this, kMoveNotifyEvent);
     NotificationCenter::getInstance()->removeObserver(this, kAddBlockEvent);
     NotificationCenter::getInstance()->removeObserver(this, kBrickDieEvent);
+    NotificationCenter::getInstance()->removeObserver(this, BackGroundEvent);
 //    NotificationCenter::getInstance()->removeObserver(this, kSecondEvent);
 }
 
@@ -91,14 +94,25 @@ bool Box2dLayer::init(){
         _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
         
         
-        TTFConfig config = TTFConfig("fonts/Marker Felt.ttf", 40,GlyphCollection::DYNAMIC);
+        TTFConfig config = TTFConfig(FONT_NAME, 40,GlyphCollection::DYNAMIC);
         scoreLabel = Label::createWithTTF(config, convertIntToString(score));
         scoreLabel->setAnchorPoint(Vec2(1.0, 1.0));
         scoreLabel->setPosition(STVisibleRect::getPointOfSceneRightUp() + Vec2(-15, -15));
         scoreLabel->setTextColor(Color4B(0, 50, 50, 255));
         addChild(scoreLabel, 10);
         
+        MenuItemSprite* pauseBtn = CocosHelper::menuItemSprite("res/ui/pause.png");
+        pauseBtn->setAnchorPoint(Vec2(0, 1.0));
+        pauseBtn->setPosition(STVisibleRect::getPointOfSceneLeftUp()+Vec2(15, -15));
+        pauseBtn->setCallback([=](Ref* pRef){
+            SoundPlayer::getInstance()->playCommonEffect("sound/click.wav");
+            this->addPauseLayer(nullptr);
+        });
         
+        Menu* pMenu = Menu::create(pauseBtn, NULL);
+        pMenu->setAnchorPoint(Vec2::ZERO);
+        pMenu->setPosition(Vec2::ZERO);
+        addChild(pMenu, 100);
         
         STAds ads;
         ads.requestAds();
@@ -215,6 +229,7 @@ void Box2dLayer::onDraw()
 void Box2dLayer::addSkipScore(cocos2d::Ref *pRef) {
     score++;
     scoreLabel->setString(convertIntToString(score));
+    SoundPlayer::getInstance()->playCommonEffect("sound/score.mp3");
 }
 
 void Box2dLayer::addB2Body(Vec2 startPos, bool useStartPos /*=false*/){
@@ -371,6 +386,7 @@ void Box2dLayer::addBrickBody(){
 }
 
 bool Box2dLayer::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *unused_event) {
+    SoundPlayer::getInstance()->playCommonEffect("sound/jump.mp3");
     if (tipSprite != nullptr) {
         tipSprite->runAction(Sequence::create(EaseSineInOut::create(FadeOut::create(0.2f)), CallFunc::create([=]{
             tipSprite->removeFromParent();
@@ -403,8 +419,8 @@ void Box2dLayer::BeginContact(b2Contact *contact) {
     //    log("A string is %s", Astring);
     //    log("B string is %s", Bstring);
     if (CompareTwo(__String::create(Astring), __String::create(Bstring), kBrick, kMonster) == true) {
-//        world->SetContactListener(nullptr);
-//        brickSprite->brickDie();
+        world->SetContactListener(nullptr);
+        brickSprite->brickDie();
     }
 }
 
@@ -417,10 +433,12 @@ void Box2dLayer::onGameOver(cocos2d::Ref *pref) {
     if (score > highestScore) {
         CCUserDefault::getInstance()->setIntegerForKey(kHighestScore, score);
         CCUserDefault::getInstance()->flush();
+        LeaderboardAdaptor::submitScore(score, "block_score");
     }
     CCUserDefault::getInstance()->setIntegerForKey(kCurrentScore, score);
     CCUserDefault::getInstance()->flush();
     replaceTheScene<FinishScene>();
+    
 }
 
 
@@ -432,4 +450,43 @@ bool Box2dLayer::CompareTwo(cocos2d::__String *src1, cocos2d::__String *src2, co
         return true;
     }
     return false;
+}
+
+void Box2dLayer::addPauseLayer(cocos2d::Ref *pRef) {
+    brickSprite->pause();
+    pauseLayer = LayerColor::create(Color4B(0, 0, 0, 180));
+    addChild(pauseLayer, 999);
+    pauseLayer->setTouchEnabled(true);
+    pauseLayer->setSwallowsTouches(true);
+    
+    MenuItemSprite* play = CocosHelper::menuItemSprite("res/ui/play.png");
+    MenuItemSprite* home = CocosHelper::menuItemSprite("res/ui/pause_home.png");
+    home->setAnchorPoint(Vec2(0.5, 0));
+    play->setAnchorPoint(Vec2(0.5, 1.0));
+    play->setPosition(STVisibleRect::getCenterOfScene() + Vec2(0, -8));
+    home->setPosition(STVisibleRect::getCenterOfScene() + Vec2(0, 8));
+    play->setTag(kPlayBtn);
+    home->setTag(kHomeBtn);
+    
+    play->setCallback(CC_CALLBACK_1(Box2dLayer::onPauseLayerButtonClick, this));
+    home->setCallback(CC_CALLBACK_1(Box2dLayer::onPauseLayerButtonClick, this));
+    
+    Menu* pMenu = Menu::create(play, home, NULL);
+    pMenu->setAnchorPoint(Vec2::ZERO);
+    pMenu->setPosition(Vec2::ZERO);
+    pauseLayer->addChild(pMenu);
+}
+
+void Box2dLayer::onPauseLayerButtonClick(cocos2d::Ref *pRef) {
+    Node* pNode = dynamic_cast<Node*>(pRef);
+    SoundPlayer::getInstance()->playCommonEffect("sound/click.wav");
+    if (pNode->getTag() == kPlayBtn) {
+        pauseLayer->runAction(Sequence::create(ScaleTo::create(0.5, 0), CallFunc::create([=]{
+            pauseLayer->removeFromParent();
+            pauseLayer=nullptr;
+        }), NULL));
+        brickSprite->resume();
+    }else {
+        replaceTheScene<HomeScene>();
+    }
 }

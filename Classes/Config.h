@@ -8,9 +8,11 @@
 
 #ifndef com_kekeapp_amazebrick_Config_h
 #define com_kekeapp_amazebrick_Config_h
-//#include <iostream>
-//#include "cocos2d.h"
-//USING_NS_CC;
+#include <iostream>
+#include "cocos2d.h"
+USING_NS_CC;
+
+
 #define MoveY 200
 #define MoveX 160
 #define XChange 120
@@ -27,5 +29,11 @@
 #define kHighestScore "kHighestScore"
 #define kCurrentScore "kCurrentScore"
 
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+#define FONT_NAME  "fonts/atn.ttf"//"AvantGarde LT Book"
+#else
+#define FONT_NAME  "fonts/atn.ttf"
+#endif
 
 #endif

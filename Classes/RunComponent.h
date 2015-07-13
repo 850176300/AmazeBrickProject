@@ -18,6 +18,7 @@ USING_NS_CC;
 
 class RunComponent : public Component{
     enum RunDirection{
+        kNone = 0,
         kUp = 1,
         kDown = 2,
         kJump,

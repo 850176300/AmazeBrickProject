@@ -7,6 +7,7 @@
 //
 
 #include "BrickSprite.h"
+#include "SoundPlayer.h"
 
 BrickSprite* BrickSprite::create(const string &file) {
     BrickSprite* pRet = new BrickSprite();
@@ -68,7 +69,8 @@ void BrickSprite::tapEnded(){
     statue = kTapEnded;
 }
 
-void BrickSprite::resume(float dt) {
+void BrickSprite::scheduleSelector(float dt) {
+    
 //    unscheduleUpdate();
 //    statue = kDie;
     tapEnded();
@@ -77,6 +79,7 @@ void BrickSprite::resume(float dt) {
 
 void BrickSprite::brickDie(){
     statue = kDie;
+    SoundPlayer::getInstance()->playCommonEffect("sound/bound.mp3");
     unscheduleUpdate();
     runAction(Sequence::create(EaseSineIn::create(MoveBy::create(0.5, Vec2(0, -1000))), CallFunc::create([=]{
         NotificationCenter::getInstance()->postNotification(kBrickDieEvent);

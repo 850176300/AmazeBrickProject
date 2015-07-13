@@ -11,12 +11,12 @@ void AdsImpl::onBannerLoadFailed( int errorCode )
 
 void AdsImpl::onBannerClicked()
 {
-    NotificationCenter::getInstance()->postNotification(kPuaseGame);
+    NotificationCenter::getInstance()->postNotification(BackGroundEvent);
 }
 
 void AdsImpl::onBannerDismissed()
 {
-    NotificationCenter::getInstance()->postNotification(kResumeGame);
+//    NotificationCenter::getInstance()->postNotification(kResumeGame);
 }
 
 void AdsImpl::onInterstitialAdLoaded()
@@ -31,7 +31,7 @@ void AdsImpl::onInterstitialShown()
 {
     
     STAds::isInterstitialShowing=true;
-    NotificationCenter::getInstance()->postNotification(kPuaseGame);
+    NotificationCenter::getInstance()->postNotification(BackGroundEvent);
  
     
 }
@@ -39,7 +39,7 @@ void AdsImpl::onInterstitialShown()
 void AdsImpl::onInterstitialDismissed()
 {
     STAds::isInterstitialShowing=false;
-    NotificationCenter::getInstance()->postNotification(kResumeGame);
+//    NotificationCenter::getInstance()->postNotification(kResumeGame);
 
 }
 

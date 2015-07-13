@@ -9,6 +9,7 @@
 #include "SuperGlobal.h"
 #include "CocosHelper.h"
 #include "SoundPlayer.h"
+#include "LeaderboardAdaptor.h"
 
 
 Scene* HomeScene::scene(){
@@ -82,6 +83,7 @@ bool HomeScene::init(){
         _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
         touchListener = listener;
         GameLayerBase::setShowAds(true);
+        LeaderboardAdaptor::authenticateLocalPlayer();
         return true;
     }
     return false;
@@ -106,12 +108,13 @@ void HomeScene::onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *unused_event
 
 void HomeScene::onButtonsClicked(cocos2d::Ref *pRef) {
     MenuItemSprite* pNode = dynamic_cast<MenuItemSprite*>(pRef);
+    SoundPlayer::getInstance()->playCommonEffect("sound/click.wav");
     switch (pNode->getTag()) {
         case kPlayBtn:
         {
             replaceTheScene<Box2dLayer>();
         }
-            break;
+         break;
         case kSoundBtn:
         {
             SoundPlayer::getInstance()->switchMusic();
@@ -128,7 +131,7 @@ void HomeScene::onButtonsClicked(cocos2d::Ref *pRef) {
             break;
         case kRankBtn:
         {
-            
+            LeaderboardAdaptor::showLeaderboard();
         }
             break;
         case kRateBtn:

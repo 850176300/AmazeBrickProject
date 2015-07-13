@@ -160,6 +160,7 @@ static AdsIOSManager *s_instance = nil;
 - (void)interstitialDidShow: (InterstitialAdType )adType
 {
     STAds::isInterstitialShowing = true;
+    
 
     if(stAdsDelegate_)
         stAdsDelegate_->onInterstitialShown(adType);

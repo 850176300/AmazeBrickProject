@@ -5,6 +5,7 @@
 #include "STVisibleRect.h"
 #include "SuperGlobal.h"
 #include "LoadingScene.h"
+#include "LeaderboardAdaptor.h"
 USING_NS_CC;
 USING_NS_ST;
 
@@ -53,7 +54,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     GB2ShapeCache::sharedGB2ShapeCache()->addShapesWithFile("BrickShape.plist");
     // create a scene. it's an autorelease object
     
-    replaceTheScene<Box2dLayer>();
+    
+    replaceTheScene<LoadingScene>();
    
     
 
@@ -64,6 +66,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 void AppDelegate::applicationDidEnterBackground() {
     Director::getInstance()->stopAnimation();
 
+    NotificationCenter::getInstance()->postNotification(BackGroundEvent);
     // if you use SimpleAudioEngine, it must be pause
     // SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }

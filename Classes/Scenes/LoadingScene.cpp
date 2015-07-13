@@ -9,6 +9,7 @@
 #include "LoadingScene.h"
 #include "STVisibleRect.h"
 #include "SuperGlobal.h"
+#include "SoundPlayer.h"
 USING_NS_ST;
 
 Scene* LoadingScene::scene(){
@@ -41,7 +42,9 @@ bool LoadingScene::init(){
 }
 
 void LoadingScene::gotoHome(float) {
+    SoundPlayer::getInstance()->playBackGroundMusic("sound/bg.mp3");
     replaceTheScene<HomeScene>();
+    
 }
 
 void LoadingScene::onEnterTransitionDidFinish(){
