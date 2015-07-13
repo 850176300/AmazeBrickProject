@@ -127,14 +127,34 @@ void b2BodySprite::addMoveEventNotify(){
     NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(b2BodySprite::onRecieveEvent), kMoveNotifyEvent, nullptr);
 }
 
+
+
+// string toolkit
+void b2BodySprite::split(const std::string& src, const char* token, strArray& vect)
+{
+    int nend=0;
+    int nbegin=0;
+    while(nend != -1)
+    {
+        nend = src.find(token, nbegin);
+        if(nend == -1)
+            vect.push_back(src.substr(nbegin, src.length()-nbegin));
+        else
+            vect.push_back(src.substr(nbegin, nend-nbegin));
+        nbegin = nend + strlen(token);
+    }
+}
+
 void b2BodySprite::onRecieveEvent(cocos2d::Ref *pRef) {
     
     __String* data = dynamic_cast<__String*>(pRef);
-    float infor = atof(data->getCString());
-    float distance = infor - (((int)infor) / 1000)*1000;
-    float dt = (((int)infor) / 1000) * 0.1;
+    strArray str;
+    split(data->getCString(), ",", str);
     
-//    log("the distance is %.2f", distance);
+    float distance = atof(str.at(1).c_str());
+    float dt = atof(str.at(0).c_str());
+    
+//    log("the duration is %.2f distance is %.2f", dt, distance);
     
     this->runAction(Sequence::create(EaseSineInOut::create(MoveBy::create(dt, Vec2(0, -distance))), CallFunc::create(std::bind(&b2BodySprite::checkNeedRemove, this)),NULL));
 }

@@ -41,7 +41,7 @@ bool BrickSprite::initWithFrame(cocos2d::SpriteFrame *frame) {
 
 bool BrickSprite::initWithFilename(const string &file) {
     if (Sprite::initWithFile(file)) {
-        statue = kIdle;
+        statue = kStatic;
         return true;
     }
     return false;
@@ -59,6 +59,20 @@ void BrickSprite::tapRSide(){
         return;
     }
     statue = kTouchR;
+}
+
+void BrickSprite::tapEnded(){
+    if (statue == kDie) {
+        return;
+    }
+    statue = kTapEnded;
+}
+
+void BrickSprite::resume(float dt) {
+//    unscheduleUpdate();
+//    statue = kDie;
+    tapEnded();
+//    scheduleUpdate();
 }
 
 void BrickSprite::brickDie(){

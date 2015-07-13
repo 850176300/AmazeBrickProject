@@ -14,7 +14,7 @@
 #include "Box2D/Box2D.h"
 #include "GLES-Render.h"
 #include "Box2dPhysicSprite.h"
-#include "BrickComponent.h"
+#include "RunComponent.h"
 #include "b2BodySprite.h"
 USING_NS_CC;
 using namespace std;

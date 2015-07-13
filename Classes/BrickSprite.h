@@ -24,6 +24,8 @@ public:
         kTouchL,
         kTouchR,
         kIdle,
+        kStatic,
+        kTapEnded,
     };
 public:
     static BrickSprite* createWithSpriteFrame(SpriteFrame* frame);
@@ -36,11 +38,15 @@ public:
     
     CC_SYNTHESIZE(BrickStatues, statue, Statues);
     
+    void resume(float dt);
+    
     void brickDie();
     
     void tapRSide();
     
     void tapLSide();
+    
+    void tapEnded();
     
 };
 

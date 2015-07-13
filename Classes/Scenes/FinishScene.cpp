@@ -108,7 +108,7 @@ void FinishScene::onEnterTransitionDidFinish(){
     GameLayerBase::onEnterTransitionDidFinish();
     int waitCount = UserDefault::getInstance()->getIntegerForKey("AdWaitingCount", 0);
     int rand = arc4random() % 2 + 4;
-    if (rand == waitCount) {
+    if (waitCount >= rand) {
         UserDefault::getInstance()->setIntegerForKey("AdWaitingCount", 0);
         UserDefault::getInstance()->flush();
         STAds ads;

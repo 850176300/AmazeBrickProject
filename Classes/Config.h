@@ -18,6 +18,9 @@
 #define SecondTime 0.5
 #define MoveDuration 0.7
 #define DropDuration 1.6
+#define SpeedX 8
+#define SpeedY 50
+#define ACCY -0
 
 #define kMoveNotifyEvent "kMoveNotifyEvent"
 #define kAddBlockEvent "kAddBlockEvent"

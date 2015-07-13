@@ -23,6 +23,7 @@ public:
 };
 
 class b2BodySprite : public Sprite{
+    typedef std::vector<std::string> strArray;
 public:
     b2BodySprite();
     ~b2BodySprite();
@@ -44,6 +45,7 @@ public:
 protected:
     void onRecieveEvent(cocos2d::Ref *pRef);
     void checkNeedRemove();
+    void split(const std::string& src, const char* token, strArray& vect);
 protected:
     float   PTMRatio;
 private:

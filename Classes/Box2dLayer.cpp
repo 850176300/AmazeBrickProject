@@ -355,7 +355,7 @@ void Box2dLayer::addBrickBody(){
     brickSprite->setColor(Color3B::BLACK);
     brickSprite->setIgnoreBodyRotation(true);
     _Brickbody->SetFixedRotation(false);
-    brickSprite->addComponent(new BrickComponent());
+    brickSprite->addComponent(new RunComponent());
     addChild(brickSprite);
     brickSprite->scheduleUpdate();
     
@@ -387,7 +387,7 @@ bool Box2dLayer::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *unused_even
 
 void Box2dLayer::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event) {
     //    b2Vec2 vel = _Brickbody->GetLinearVelocity();
-    
+//    brickSprite->tapEnded();
 }
 
 void Box2dLayer::onFirstTimeMove(b2BodySprite *spr) {
