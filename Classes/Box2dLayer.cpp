@@ -234,12 +234,13 @@ void Box2dLayer::addSkipScore(cocos2d::Ref *pRef) {
 
 void Box2dLayer::addB2Body(Vec2 startPos, bool useStartPos /*=false*/){
     if (centerDelta == -1000) {
-        float deltax = arc4random() % 10 ;
-        centerDelta = (deltax - 5) * 30;
+        int trueFlase = arc4random() % 2;
+        int x = arc4random() % 10 + 25;
+        centerDelta = trueFlase == 0 ? x : -x;
     }
     addBrickCount++;
     
-    float Posy = useStartPos == false ? obstacleY : startPos.y + 600;
+    float Posy = useStartPos == false ? obstacleY : startPos.y + 750;
     Color3B brickColor = allColors.at((addBrickCount / 5) % ColorCount);
     {
         b2BodySprite* pSprite = b2BodySprite::create("brick2.png");
@@ -301,7 +302,7 @@ void Box2dLayer::addSmallBrick1(float Posy){
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
     bodyDef.userData = (void*)kMonster;
-    bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta + delta)/PTM_RATIO, (Posy +180)/PTM_RATIO);
+    bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta + delta)/PTM_RATIO, (Posy +240)/PTM_RATIO);
     b2Body* _body = world->CreateBody(&bodyDef);
     // Define another box shape for our dynamic body.
     
@@ -311,7 +312,7 @@ void Box2dLayer::addSmallBrick1(float Posy){
     _body->SetBullet(true);
     pSprite->setB2Body(_body);
     pSprite->setPTMRatio(PTM_RATIO);
-    pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta + delta, Posy+180));
+    pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta + delta, Posy+240));
     pSprite->setColor(brickColor);
     addChild(pSprite);
 
@@ -321,8 +322,9 @@ void Box2dLayer::addSmallBrick1(float Posy){
 }
 
 void Box2dLayer::addSmallBrick2(float Posy){
-    float deltax = arc4random() % 10 ;
-    centerDelta = (deltax - 5) * 30;
+    int trueFlase = arc4random() % 2;
+    int x = arc4random() % 10 + 25;
+    centerDelta = trueFlase == 0 ? x : -x;
     Color3B brickColor = allColors.at((addBrickCount / 5) % ColorCount);
     
     int rand = arc4random() % 8;
@@ -331,7 +333,7 @@ void Box2dLayer::addSmallBrick2(float Posy){
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
     bodyDef.userData = (void*)kMonster;
-    bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta + delta)/PTM_RATIO, (Posy +460)/PTM_RATIO);
+    bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta + delta)/PTM_RATIO, (Posy + 580)/PTM_RATIO);
     b2Body* _body = world->CreateBody(&bodyDef);
     // Define another box shape for our dynamic body.
     
@@ -341,7 +343,7 @@ void Box2dLayer::addSmallBrick2(float Posy){
     _body->SetBullet(true);
     pSprite->setB2Body(_body);
     pSprite->setPTMRatio(PTM_RATIO);
-    pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta + delta, Posy+460));
+    pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta + delta, Posy+580));
     pSprite->setColor(brickColor);
     addChild(pSprite);
     pSprite->addMoveEventNotify();

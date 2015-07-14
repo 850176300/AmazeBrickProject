@@ -29,10 +29,23 @@ void RunComponent::update(float dt) {
 //        totalTime = (Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().height * 0.6 - _startPosition.y) / MoveY ;
 //        totalTime = totalTime > 1.0 ? 1.0 : totalTime;
 //        totalTime = totalTime > 0.5 ? totalTime : 0.5;
-        firstTimeOver = true;
-        totalTime = 1.0f;
-        timeOver = totalTime / 2.0;
-        _parent->unschedule(schedule_selector(BrickSprite::scheduleSelector));
+        totalTime = (Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().height * 0.6 - _startPosition.y) / MoveY ;
+        if (fabs(totalTime) < 0.05){
+            timeOver = 0.45;
+            _direction = kNone;
+            NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent, __String::create("0.4,200"));
+        }else {
+            moveHeight = MoveY;
+            if (totalTime < 1.0) {
+                moveHeight = MoveY*totalTime;
+            }
+            firstTimeOver = true;
+            totalTime = .8f;
+            timeOver = totalTime / 2.0;
+            _parent->unschedule(schedule_selector(BrickSprite::scheduleSelector));
+            
+        }
+        
 //        log("the total time is %.2f", totalTime);
     }else if (_parent->getStatues() == BrickSprite::kTouchR){
         _parent->setStatues(BrickSprite::kIdle);
@@ -41,19 +54,31 @@ void RunComponent::update(float dt) {
         _direction = kUp;
         deltaX = MoveX;
         firstTimeOver = true;
-//        totalTime = (Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().height * 0.6 - _startPosition.y) / MoveY ;
+        totalTime = (Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().height * 0.6 - _startPosition.y) / MoveY ;
+        if (fabs(totalTime) < 0.05){
+            timeOver = 0.45;
+            _direction = kNone;
+            NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent, __String::create("0.4,200"));
+        }else {
+            moveHeight = MoveY;
+            if (totalTime < 1.0) {
+                moveHeight = MoveY * totalTime;
+            }
+            totalTime = 0.8f;
+            timeOver = totalTime / 2.0;
+            //        log("the total time is %.2f", totalTime);
+            _parent->unschedule(schedule_selector(BrickSprite::scheduleSelector));
+        }
 //        totalTime = totalTime > 1.0 ? 1.0 : totalTime;
 //        totalTime = totalTime > 0.5 ? totalTime : 0.5;
-        totalTime = 1.0f;
-        timeOver = totalTime / 2.0;
-//        log("the total time is %.2f", totalTime);
-        _parent->unschedule(schedule_selector(BrickSprite::scheduleSelector));
+        
     }else if (_parent->getStatues() == BrickSprite::kDie){
         return;
     }else if (_parent->getStatues() == BrickSprite::kTapEnded) {
 //        if (deltat > 0.5) {
             _elapsed = 0;
             _direction = kJump;
+        _startPosition = _previousPos;
 //        }else {
 //            _elapsed = timeOver;
 //            _direction = kNone;
@@ -74,14 +99,14 @@ void RunComponent::update(float dt) {
 }
 
 void RunComponent::step(float t) {
-//    log("the move durantion is %.2f", t);
-//    return;
+    bool gotoJump = false;
+    bool gotoNone = false;
     float y = 0;
     switch (_direction) {
         case kUp:
         {
 //            log("the move durantion is %.2f", t);
-            y = MoveY * 4 *  t * (totalTime - t);
+            y = MoveY * 1/.16 *  t * (totalTime - t);
             if (t >= timeOver) {
                 _direction = kDown;
             }
@@ -93,28 +118,37 @@ void RunComponent::step(float t) {
                     timeOver = totalTime - t;
                     deltat = totalTime - t * 2;
                     stringstream ss("");
-                    __String* _data = __String::createWithFormat("%.2f", deltat > 0.5 ? 0.5f : deltat+0.1);
-                    if (deltat > 0.5) {
-                        _parent->scheduleOnce(schedule_selector(BrickSprite::scheduleSelector), deltat > 0.5 ? 0.5f : deltat);
-                    }
-                    __String* distance = __String::createWithFormat("%.2f", (MoveY - y));
+                    float dlt = 0.4 - moveHeight / MoveY * 0.4 + 0.1;
+
+                    __String* _data = __String::createWithFormat("%.2f", dlt);
+                    __String* distance = __String::createWithFormat("%.2f", (MoveY - moveHeight));
                     ss<<_data->getCString()<<","<<distance->getCString();
                     NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent, __String::create(ss.str()));
+                    timeOver = dlt;
+                    gotoNone = true;
+                    log("the distance is %.2f, and the time is %.2f", MoveY - moveHeight, dlt);
                 }
             }
-            log("the y Value is %.2f", y);
            
         }
             break;
         case kDown:
         {
-            y = MoveY * 4 *  t * (totalTime - t);
+            y = MoveY * 1/.16 *  t * (totalTime - t);
             
         }
             break;
         case kJump:
         {
-            y = -MoveY * 4 * t * t;
+            y = -MoveY * 5 * t * t;
+//            y = _previousPos.y + y - _startPosition.y;
+        }
+            break;
+        case kNone:
+        {
+            if (t > timeOver) {
+                gotoJump = true;
+            }
         }
             break;
         default:
@@ -144,6 +178,16 @@ void RunComponent::step(float t) {
     if (_parent->boundingBox().getMinY() < Director::getInstance()->getVisibleOrigin().y) {
         _parent->brickDie();
         
+    }
+    if (gotoJump == true) {
+        _direction = kJump;
+        _elapsed = 0;
+        _startPosition = _previousPos;
+    }
+    
+    if (gotoNone == true) {
+        _direction = kNone;
+        _startPosition = _previousPos;
     }
 }
 

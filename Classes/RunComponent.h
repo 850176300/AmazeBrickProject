@@ -44,6 +44,8 @@ private:
     float timeOver = 0.5;
     float totalTime = 0;
     float deltat = 0;
+    
+    float moveHeight = 0;
 //    float recordTimeOver = 0;
 };
 
