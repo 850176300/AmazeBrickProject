@@ -8,6 +8,7 @@
 
 #include "BrickSprite.h"
 #include "SoundPlayer.h"
+#include "Config.h"
 
 BrickSprite* BrickSprite::create(const string &file) {
     BrickSprite* pRet = new BrickSprite();
@@ -80,6 +81,7 @@ void BrickSprite::scheduleSelector(float dt) {
 void BrickSprite::brickDie(){
     statue = kDie;
     SoundPlayer::getInstance()->playCommonEffect("sound/bound.mp3");
+    NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent,__String::create("shake"));
     unscheduleUpdate();
     runAction(Sequence::create(EaseSineIn::create(MoveBy::create(0.5, Vec2(0, -1000))), CallFunc::create([=]{
         NotificationCenter::getInstance()->postNotification(kBrickDieEvent);

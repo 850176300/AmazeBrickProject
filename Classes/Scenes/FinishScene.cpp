@@ -29,7 +29,7 @@ bool FinishScene::init(){
         
         Size frameSize = Director::getInstance()->getOpenGLView()->getFrameSize();
         
-        float deltaHeight = frameSize.height / 960.0 * 40;
+        float deltaHeight = STVisibleRect::getGlvisibleSize().width * 0.18;
         
         gameTitle = new CrippleSprite();
         gameTitle->init(LocalizeString("res/ui/score.png"), 8);
@@ -53,12 +53,12 @@ bool FinishScene::init(){
         
         Sprite* smallTitle = Sprite::create(LocalizeString("res/ui/end.png"));
         smallTitle->setAnchorPoint(Vec2(0.5, 0));
-        smallTitle->setPosition(Vec2(STVisibleRect::getCenterOfScene().x, gameTitle->getPositionY()+gameTitle->getContentSize().height / 2.0 + deltaHeight/1.5+smallTitle->getContentSize().height / 2.0));
+        smallTitle->setPosition(Vec2(STVisibleRect::getCenterOfScene().x, gameTitle->getPositionY()+gameTitle->getContentSize().height / 2.0 + deltaHeight/2.5+smallTitle->getContentSize().height / 2.0));
         addChild(smallTitle);
         
         
         MenuItemSprite* play = CocosHelper::menuItemSprite(LocalizeString("res/ui/play.png").c_str());
-        play->setPosition(gameTitle->getPosition() + Vec2(0, -gameTitle->getContentSize().height / 2.0-play->getContentSize().height/2.0 - deltaHeight/1.5));
+        play->setPosition(gameTitle->getPosition() + Vec2(0, -gameTitle->getContentSize().height / 2.0-play->getContentSize().height/2.0 - deltaHeight/1.8));
         play->setTag(kPlayBtn);
         play->setCallback(CC_CALLBACK_1(FinishScene::onButtonsClicked, this));
         
@@ -148,7 +148,7 @@ void FinishScene::onButtonsClicked(cocos2d::Ref *pRef) {
             break;
         case kSoundBtn:
         {
-            SoundPlayer::getInstance()->switchMusic();
+            SoundPlayer::getInstance()->switchVolume();
             string soundFile = LocalizeString("res/ui/sound_on.png");
             if (!SoundPlayer::getInstance()->isMusicOpen()) {
                 soundFile = LocalizeString("res/ui/sound_off.png");

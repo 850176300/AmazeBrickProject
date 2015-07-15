@@ -83,14 +83,14 @@ bool Box2dLayer::init(){
         
         SpriteFrameCache::getInstance()->addSpriteFramesWithFile("common.plist");
         
-        auto listener = EventListenerTouchOneByOne::create();
-        listener->setSwallowTouches(_swallowsTouches);
+        auto listener = EventListenerTouchAllAtOnce::create();
         
-        listener->onTouchBegan = CC_CALLBACK_2(Box2dLayer::onTouchBegan, this);
-        listener->onTouchMoved = CC_CALLBACK_2(Box2dLayer::onTouchMoved, this);
-        listener->onTouchEnded = CC_CALLBACK_2(Box2dLayer::onTouchEnded, this);
-        listener->onTouchCancelled = CC_CALLBACK_2(Box2dLayer::onTouchCancelled, this);
+        listener->onTouchesBegan = CC_CALLBACK_2(Box2dLayer::onTouchesBegan, this);
+        listener->onTouchesMoved = CC_CALLBACK_2(Box2dLayer::onTouchesMoved, this);
+        listener->onTouchesEnded = CC_CALLBACK_2(Box2dLayer::onTouchesEnded, this);
+        listener->onTouchesCancelled = CC_CALLBACK_2(Box2dLayer::onTouchesCancelled, this);
         
+        setTouchMode(Touch::DispatchMode::ALL_AT_ONCE);
         _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
         
         
@@ -238,6 +238,7 @@ void Box2dLayer::addB2Body(Vec2 startPos, bool useStartPos /*=false*/){
         int x = arc4random() % 10 + 25;
         centerDelta = trueFlase == 0 ? x : -x;
     }
+    log("the ceter delta is %.2f", centerDelta);
     addBrickCount++;
     
     float Posy = useStartPos == false ? obstacleY : startPos.y + 750;
@@ -247,7 +248,7 @@ void Box2dLayer::addB2Body(Vec2 startPos, bool useStartPos /*=false*/){
         b2BodyDef bodyDef;
         bodyDef.type = b2_staticBody;
         bodyDef.userData = (void*)kMonster;
-        bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta - pSprite->getContentSize().width/2.0)/PTM_RATIO, (Posy)/PTM_RATIO);
+        bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta - 120 - pSprite->getContentSize().width/2.0)/PTM_RATIO, (Posy)/PTM_RATIO);
         b2Body* _body = world->CreateBody(&bodyDef);
         // Define another box shape for our dynamic body.
         GB2ShapeCache::sharedGB2ShapeCache()->addFixturesToBody(_body, "brick2");
@@ -257,7 +258,7 @@ void Box2dLayer::addB2Body(Vec2 startPos, bool useStartPos /*=false*/){
         pSprite->setB2Body(_body);
         pSprite->setPTMRatio(PTM_RATIO);
         pSprite->setColor(brickColor);
-        pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta - pSprite->getContentSize().width/2.0, Posy));
+        pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta - 120 - pSprite->getContentSize().width/2.0, Posy));
         addChild(pSprite);
         pSprite->addMoveEventNotify();
         pSprite->setCheckSkip(true);
@@ -268,7 +269,7 @@ void Box2dLayer::addB2Body(Vec2 startPos, bool useStartPos /*=false*/){
         b2BodyDef bodyDef;
         bodyDef.type = b2_staticBody;
         bodyDef.userData = (void*)kMonster;
-        bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta + 250 + pSprite->getContentSize().width/2.0)/PTM_RATIO, (Posy )/PTM_RATIO);
+        bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + 120 + centerDelta + pSprite->getContentSize().width/2.0)/PTM_RATIO, (Posy )/PTM_RATIO);
         b2Body* _body = world->CreateBody(&bodyDef);
         // Define another box shape for our dynamic body.
 
@@ -278,7 +279,7 @@ void Box2dLayer::addB2Body(Vec2 startPos, bool useStartPos /*=false*/){
         _body->SetBullet(true);
         pSprite->setB2Body(_body);
         pSprite->setPTMRatio(PTM_RATIO);
-        pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + centerDelta + 250 + pSprite->getContentSize().width/2.0, Posy));
+        pSprite->setPosition(Vec2(STVisibleRect::getCenterOfScene().x + 120 + centerDelta + pSprite->getContentSize().width/2.0, Posy));
         pSprite->setColor(brickColor);
         addChild(pSprite);
         pSprite->addMoveEventNotify();
@@ -295,14 +296,14 @@ void Box2dLayer::addB2Body(Vec2 startPos, bool useStartPos /*=false*/){
 void Box2dLayer::addSmallBrick1(float Posy){
     Color3B brickColor = allColors.at((addBrickCount / 5) % ColorCount);
     
-    int rand = arc4random() % 8;
-    float delta = 15 * (rand + 4);
+    int rand = arc4random() % 11;
+    float delta = 25 * (rand - 5);
 
     b2BodySprite* pSprite = b2BodySprite::create("brick3.png");
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
     bodyDef.userData = (void*)kMonster;
-    bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta + delta)/PTM_RATIO, (Posy +240)/PTM_RATIO);
+    bodyDef.position.Set((STVisibleRect::getCenterOfScene().x +delta)/PTM_RATIO, (Posy +240)/PTM_RATIO);
     b2Body* _body = world->CreateBody(&bodyDef);
     // Define another box shape for our dynamic body.
     
@@ -327,13 +328,13 @@ void Box2dLayer::addSmallBrick2(float Posy){
     centerDelta = trueFlase == 0 ? x : -x;
     Color3B brickColor = allColors.at((addBrickCount / 5) % ColorCount);
     
-    int rand = arc4random() % 8;
-    float delta = 16 * (rand + 4);
+    int rand = arc4random() % 11;
+    float delta = 25 * (rand - 5);
     b2BodySprite* pSprite = b2BodySprite::create("brick3.png");
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
     bodyDef.userData = (void*)kMonster;
-    bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + centerDelta + delta)/PTM_RATIO, (Posy + 580)/PTM_RATIO);
+    bodyDef.position.Set((STVisibleRect::getCenterOfScene().x + delta)/PTM_RATIO, (Posy + 580)/PTM_RATIO);
     b2Body* _body = world->CreateBody(&bodyDef);
     // Define another box shape for our dynamic body.
     
@@ -387,26 +388,31 @@ void Box2dLayer::addBrickBody(){
     
 }
 
-bool Box2dLayer::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *unused_event) {
-    SoundPlayer::getInstance()->playCommonEffect("sound/jump.mp3");
-    if (tipSprite != nullptr) {
-        tipSprite->runAction(Sequence::create(EaseSineInOut::create(FadeOut::create(0.2f)), CallFunc::create([=]{
-            tipSprite->removeFromParent();
-            tipSprite = nullptr;
-        }), NULL));
+void Box2dLayer::onTouchesBegan(const std::vector<Touch *> &touches, cocos2d::Event *unused_event) {
+    
+    size_t size = touches.size();
+    for (int i = 0; i < size && i < 2; ++i) {
+        SoundPlayer::getInstance()->playCommonEffect("sound/jump.mp3");
+        Touch* touch = touches.at(i);
+        if (tipSprite != nullptr) {
+            tipSprite->runAction(Sequence::create(EaseSineInOut::create(FadeOut::create(0.2f)), CallFunc::create([=]{
+                tipSprite->removeFromParent();
+                tipSprite = nullptr;
+            }), NULL));
+        }
+        if (touch->getLocation().x > Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().width / 2.0) {
+            brickSprite->tapRSide();
+        }else {
+            brickSprite->tapLSide();
+        }
     }
-    if (touch->getLocation().x > Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().width / 2.0) {
-        brickSprite->tapRSide();
-    }else {
-        brickSprite->tapLSide();
-    }
-    return true;
+    
 }
 
-void Box2dLayer::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event) {
-    //    b2Vec2 vel = _Brickbody->GetLinearVelocity();
-//    brickSprite->tapEnded();
-}
+//void Box2dLayer::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event) {
+//    //    b2Vec2 vel = _Brickbody->GetLinearVelocity();
+////    brickSprite->tapEnded();
+//}
 
 void Box2dLayer::onFirstTimeMove(b2BodySprite *spr) {
     addB2Body(spr->getPosition() , true);

@@ -47,6 +47,13 @@ void STSystemFunction::makeToast(const char* message)
 
 void STSystemFunction::rating()
 {
+    NSString *url=nil;
+    if ([[UIDevice currentDevice].systemVersion floatValue] < 7.0) {
+        url=[NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@",@"1016681594"];
+    }else{
+        url=[NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%@",@"1016681594"];
+    }
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
 }
 
 void STSystemFunction::contactUs()

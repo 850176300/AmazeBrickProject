@@ -144,6 +144,8 @@
 		0177DC871B4520CC007D546F /* HomeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0177DC851B4520CC007D546F /* HomeScene.cpp */; };
 		01A0157B1B480A7100A61AC8 /* FinishScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01A015791B480A7100A61AC8 /* FinishScene.cpp */; };
 		01B3FE671B4C2EFE001CE9AA /* brick3.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B3FE661B4C2EFE001CE9AA /* brick3.png */; };
+		01BD6DF41B56A83F00294E3D /* Shake.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01BD6DF21B56A83F00294E3D /* Shake.cpp */; };
+		01BD6DFD1B56AD2700294E3D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01BD6DFC1B56AD2700294E3D /* Default-568h@2x.png */; };
 		01C26CF91B53F03B00324FD7 /* GameKitHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01C26CF61B53F03B00324FD7 /* GameKitHelper.mm */; };
 		01C26CFA1B53F03B00324FD7 /* LeaderboardAdaptor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01C26CF81B53F03B00324FD7 /* LeaderboardAdaptor.mm */; };
 		01C26CFC1B53F05300324FD7 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C26CFB1B53F05300324FD7 /* GameKit.framework */; };
@@ -655,6 +657,9 @@
 		01A015791B480A7100A61AC8 /* FinishScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FinishScene.cpp; sourceTree = "<group>"; };
 		01A0157A1B480A7100A61AC8 /* FinishScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FinishScene.h; sourceTree = "<group>"; };
 		01B3FE661B4C2EFE001CE9AA /* brick3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = brick3.png; sourceTree = "<group>"; };
+		01BD6DF21B56A83F00294E3D /* Shake.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shake.cpp; sourceTree = "<group>"; };
+		01BD6DF31B56A83F00294E3D /* Shake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shake.h; sourceTree = "<group>"; };
+		01BD6DFC1B56AD2700294E3D /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		01C26CF51B53F03B00324FD7 /* GameKitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameKitHelper.h; sourceTree = "<group>"; };
 		01C26CF61B53F03B00324FD7 /* GameKitHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameKitHelper.mm; sourceTree = "<group>"; };
 		01C26CF71B53F03B00324FD7 /* LeaderboardAdaptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeaderboardAdaptor.h; sourceTree = "<group>"; };
@@ -1370,6 +1375,8 @@
 		011EB4691B44E4AD00191CB8 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				01BD6DF21B56A83F00294E3D /* Shake.cpp */,
+				01BD6DF31B56A83F00294E3D /* Shake.h */,
 				0177DC6B1B451AAD007D546F /* common */,
 				0177DC7B1B451AAD007D546F /* ensRippleNode.cpp */,
 				0177DC7C1B451AAD007D546F /* ensRippleNode.h */,
@@ -1677,6 +1684,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				01BD6DFC1B56AD2700294E3D /* Default-568h@2x.png */,
 				1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */,
 				15AA9C4015B7EC450033D6C2 /* Classes */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -1950,6 +1958,7 @@
 				01C4E0901B50E361004F6B13 /* AppIcon57x57@2x.png in Resources */,
 				011EB3C61B44DA2400191CB8 /* MPCloseButtonX.png in Resources */,
 				011EB3C11B44DA2300191CB8 /* LICENSE.txt in Resources */,
+				01BD6DFD1B56AD2700294E3D /* Default-568h@2x.png in Resources */,
 				01C4E0931B50E361004F6B13 /* AppIcon60x60@3x.png in Resources */,
 				01D25A0A1B44F49E00648080 /* BrickShape.plist in Resources */,
 				1AFAF8BD16D35E4900DB1158 /* CloseSelected.png in Resources */,
@@ -1995,6 +2004,7 @@
 			files = (
 				011EB4921B44E4AD00191CB8 /* Box2dPhysicSprite.cpp in Sources */,
 				011EB3B01B44DA2300191CB8 /* ChartboostInterstitialCustomEvent.m in Sources */,
+				01BD6DF41B56A83F00294E3D /* Shake.cpp in Sources */,
 				01D259DB1B44F3F000648080 /* BrickSprite.cpp in Sources */,
 				011EB4661B44E48A00191CB8 /* Util.cpp in Sources */,
 				01D259DF1B44F3F000648080 /* VisibleRect.cpp in Sources */,

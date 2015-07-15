@@ -10,6 +10,7 @@
 #include "CocosHelper.h"
 #include "SoundPlayer.h"
 #include "LeaderboardAdaptor.h"
+#include "STSystemFunction.h"
 
 
 Scene* HomeScene::scene(){
@@ -26,7 +27,7 @@ bool HomeScene::init(){
     if (GameLayerBase::initWithColor(Color4B::WHITE)) {
         Sprite* smallTitle = Sprite::create(LocalizeString("res/ui/logo_small.png"));
         smallTitle->setAnchorPoint(Vec2(0.5, 0));
-        smallTitle->setPosition(Vec2(STVisibleRect::getCenterOfScene().x, STVisibleRect::getOriginalPoint().y + 120));
+        smallTitle->setPosition(Vec2(STVisibleRect::getCenterOfScene().x, STVisibleRect::getOriginalPoint().y + 140));
         addChild(smallTitle);
         
         Size frameSize = Director::getInstance()->getOpenGLView()->getFrameSize();
@@ -117,7 +118,7 @@ void HomeScene::onButtonsClicked(cocos2d::Ref *pRef) {
          break;
         case kSoundBtn:
         {
-            SoundPlayer::getInstance()->switchMusic();
+            SoundPlayer::getInstance()->switchVolume();
             string soundFile = LocalizeString("res/ui/sound_on.png");
             if (!SoundPlayer::getInstance()->isMusicOpen()) {
                 soundFile = LocalizeString("res/ui/sound_off.png");
@@ -136,7 +137,8 @@ void HomeScene::onButtonsClicked(cocos2d::Ref *pRef) {
             break;
         case kRateBtn:
         {
-            
+            STSystemFunction st;
+            st.rating();
         }
             break;
         default:

@@ -8,6 +8,7 @@
 
 #include "b2BodySprite.h"
 #include "Config.h"
+#include "Shake.h"
 
 b2BodySprite::b2BodySprite(){
     _delegate = nullptr;
@@ -148,6 +149,14 @@ void b2BodySprite::split(const std::string& src, const char* token, strArray& ve
 void b2BodySprite::onRecieveEvent(cocos2d::Ref *pRef) {
     
     __String* data = dynamic_cast<__String*>(pRef);
+    if (data->compare("shake") == 0) {
+        stopAllActions();
+        _pB2Body->GetWorld()->DestroyBody(_pB2Body);
+        _pB2Body = nullptr;
+        this->runAction(Shake::create(0.2, 5));
+        return;
+    }
+    
     strArray str;
     split(data->getCString(), ",", str);
     

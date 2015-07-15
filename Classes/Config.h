@@ -13,7 +13,7 @@
 USING_NS_CC;
 
 
-#define MoveY 200
+#define MoveY 240
 #define MoveX 150
 #define XChange 120
 #define MoveDelta 180

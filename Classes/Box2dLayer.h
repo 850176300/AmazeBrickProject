@@ -42,11 +42,14 @@ public:
     CREATE_FUNC(Box2dLayer);
     
 protected:
-    virtual bool onTouchBegan(Touch *touch, Event *unused_event);
-    virtual void onTouchMoved(Touch *touch, Event *unused_event){}
-    virtual void onTouchEnded(Touch *touch, Event *unused_event);
-    virtual void onTouchCancelled(Touch *touch, Event *unused_event){}
-    
+//    virtual bool onTouchBegan(Touch *touch, Event *unused_event);
+//    virtual void onTouchMoved(Touch *touch, Event *unused_event){}
+//    virtual void onTouchEnded(Touch *touch, Event *unused_event);
+//    virtual void onTouchCancelled(Touch *touch, Event *unused_event){}
+    virtual void onTouchesBegan(const std::vector<Touch*>& touches, Event *unused_event);
+    virtual void onTouchesMoved(const std::vector<Touch*>& touches, Event *unused_event){}
+    virtual void onTouchesEnded(const std::vector<Touch*>& touches, Event *unused_event){}
+    virtual void onTouchesCancelled(const std::vector<Touch*>&touches, Event *unused_event){}
     virtual void onFirstTimeMove(b2BodySprite* spr);
     void addBrickBody();
     void addB2Body(Vec2 startPos, bool useStartPos = false);
