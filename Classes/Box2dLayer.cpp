@@ -238,7 +238,7 @@ void Box2dLayer::addB2Body(Vec2 startPos, bool useStartPos /*=false*/){
         int x = arc4random() % 10 + 25;
         centerDelta = trueFlase == 0 ? x : -x;
     }
-    log("the ceter delta is %.2f", centerDelta);
+//    log("the ceter delta is %.2f", centerDelta);
     addBrickCount++;
     
     float Posy = useStartPos == false ? obstacleY : startPos.y + 750;
