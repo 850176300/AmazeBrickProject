@@ -26,11 +26,8 @@ void RunComponent::update(float dt) {
         _direction = kUp;
         deltaX = 0-MoveX;
         
-//        totalTime = (Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().height * 0.6 - _startPosition.y) / MoveY ;
-//        totalTime = totalTime > 1.0 ? 1.0 : totalTime;
-//        totalTime = totalTime > 0.5 ? totalTime : 0.5;
-        totalTime = (Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().height * 0.6 - _startPosition.y) / MoveY ;
-        if (fabs(totalTime) < 0.05){
+        totalTime = (Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().height * 0.5 - _startPosition.y) / MoveY ;
+        if (fabs(totalTime) < 0.1){
             timeOver = 0.35;
             _direction = kNone;
             NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent, __String::create("0.3,180"));
@@ -54,9 +51,9 @@ void RunComponent::update(float dt) {
         _direction = kUp;
         deltaX = MoveX;
         firstTimeOver = true;
-        totalTime = (Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().height * 0.6 - _startPosition.y) / MoveY ;
-        if (fabs(totalTime) < 0.05){
-            timeOver = 0.35;
+        totalTime = (Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().height * 0.5 - _startPosition.y) / MoveY ;
+        if (fabs(totalTime) < 0.1){
+            timeOver = 0.4;
             _direction = kNone;
             NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent, __String::create("0.3,180"));
         }else {
@@ -106,22 +103,22 @@ void RunComponent::step(float t) {
         case kUp:
         {
 //            log("the move durantion is %.2f", t);
-            y = MoveY * 4 *  t * (totalTime - t);
+            y = MoveY * 5 *  t * (totalTime - t);
             if (t >= timeOver) {
                 _direction = kDown;
             }
             
-            if (_startPosition.y + y >= Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().height * 0.6) {
-                y = Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().height * 0.6 - _startPosition.y;
+            if (_startPosition.y + y >= Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().height * 0.5) {
+                y = Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().height * 0.5 - _startPosition.y;
                 if (firstTimeOver == true) {
                     firstTimeOver = false;
                     timeOver = totalTime - t;
                     deltat = totalTime - t * 2;
                     stringstream ss("");
-                    float dlt = 0.3 - moveHeight / MoveY * 0.3 + 0.1;
+                    float dlt = 0.4;//0.4 - moveHeight / MoveY * 0.4 + 0.1;
 
                     __String* _data = __String::createWithFormat("%.2f", dlt);
-                    __String* distance = __String::createWithFormat("%.2f", (MoveY - moveHeight));
+                    __String* distance = __String::createWithFormat("%.2f", (MoveY - moveHeight + 50));
                     ss<<_data->getCString()<<","<<distance->getCString();
                     NotificationCenter::getInstance()->postNotification(kMoveNotifyEvent, __String::create(ss.str()));
                     timeOver = dlt;
@@ -134,13 +131,13 @@ void RunComponent::step(float t) {
             break;
         case kDown:
         {
-            y = MoveY * 4 *  t * (totalTime - t);
+            y = MoveY * 5 *  t * (totalTime - t);
             
         }
             break;
         case kJump:
         {
-            y = -MoveY * 4 * t * t;
+            y = -MoveY * 5 * t * t;
 //            y = _previousPos.y + y - _startPosition.y;
         }
             break;

@@ -94,7 +94,7 @@ bool Box2dLayer::init(){
         _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
         
         
-        TTFConfig config = TTFConfig(FONT_NAME, 40,GlyphCollection::DYNAMIC);
+        TTFConfig config = TTFConfig(FONT_NAME, 44,GlyphCollection::DYNAMIC);
         scoreLabel = Label::createWithTTF(config, convertIntToString(score));
         scoreLabel->setAnchorPoint(Vec2(1.0, 1.0));
         scoreLabel->setPosition(STVisibleRect::getPointOfSceneRightUp() + Vec2(-15, -15));

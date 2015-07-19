@@ -180,7 +180,7 @@ void b2BodySprite::checkNeedRemove(){
         }
     }
     if (needCheckSkip == true && hasSendEvent == false) {
-        if (getBoundingBox().getMidY() <= originPP.y + glSize.height * 0.6 && hasSendEvent == false) {
+        if (getBoundingBox().getMidY() <= originPP.y + glSize.height * 0.5 && hasSendEvent == false) {
             NotificationCenter::getInstance()->postNotification(kAddBlockEvent);
             hasSendEvent = true;
             needCheckSkip = false;
