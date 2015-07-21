@@ -76,22 +76,22 @@
         <!-- 默认没有开启GCM，只有开启GCM的项目才需要配置此项 -->
         <meta-data
             android:name="GCM_SenderId"
-            android:value="Your sender ID" />
+            android:value="4443543" />
         <meta-data
             android:name="Flurry_Key"
             android:value="Your flurry key" />
         <meta-data
             android:name="MoPub_phone_banner"
-            android:value="Your MoPub phone banner key" />
+            android:value="21f9c00e5d874788ac69e74713fd3e25" />
         <meta-data
             android:name="MoPub_phone_fullscreen"
-            android:value="Your MoPub phone fullscreen key" />
+            android:value="4a24c3f86a544f2dbc9109c38f74f3dd" />
         <meta-data
             android:name="MoPub_tablet_banner"
-            android:value="Your MoPub tablet banner key" />
+            android:value="da3e7212b05a499eb22aaaf044ef12a4" />
         <meta-data
             android:name="MoPub_tablet_fullscreen"
-            android:value="Your MoPub tablet fullscreen key" />
+            android:value="185e4e5d31dd42a4825fad3b646d067c" />
         <meta-data
             android:name="studioService"
             android:value="" /><!--for example :http://services.XXXXXXX.com-->
