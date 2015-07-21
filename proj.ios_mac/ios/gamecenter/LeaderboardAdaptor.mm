@@ -25,3 +25,7 @@ void LeaderboardAdaptor::showLeaderboard()
     
     [[GameKitHelper sharedGameKitHelper]showLeaderboard];
 }
+
+void LeaderboardAdaptor::requestScore(std::function<void (int)> callback) {
+    callback(0);
+}

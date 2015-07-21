@@ -11,7 +11,7 @@
 #include "SoundPlayer.h"
 #include "LeaderboardAdaptor.h"
 #include "STSystemFunction.h"
-
+#include "Config.h"
 
 Scene* HomeScene::scene(){
     Scene* pScene = Scene::create();
@@ -85,6 +85,12 @@ bool HomeScene::init(){
         touchListener = listener;
         GameLayerBase::setShowAds(true);
         LeaderboardAdaptor::authenticateLocalPlayer();
+        LeaderboardAdaptor::requestScore([=](int score){
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+            UserDefault::getInstance()->setIntegerForKey(kHighestScore, score);
+            UserDefault::getInstance()->flush();
+#endif
+        });
         return true;
     }
     return false;

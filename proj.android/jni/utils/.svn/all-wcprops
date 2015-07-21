@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/utils
+END
+ST_SystemFunction_Android.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/utils/ST_SystemFunction_Android.cpp
+END
+STSystemFunction.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/utils/STSystemFunction.cpp
+END
+ST_JNI_Helper.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/utils/ST_JNI_Helper.cpp
+END
+ST_SystemFunction_Android.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/utils/ST_SystemFunction_Android.h
+END
+com_common_android_jni_STSystemFunction.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/utils/com_common_android_jni_STSystemFunction.cpp
+END
+ST_JNI_Helper.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/utils/ST_JNI_Helper.h
+END
+com_common_android_jni_STSystemFunction.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/utils/com_common_android_jni_STSystemFunction.h
+END

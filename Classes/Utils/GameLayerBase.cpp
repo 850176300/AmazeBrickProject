@@ -175,9 +175,9 @@ void GameLayerBase::showNextButton(){
     nextBtn = CocosHelper::getButton("ui/publish/next.png", "ui/publish/next.png");
     //    homeBtn->setAnchorPoint(Vec2(1.0, 1.0));
     nextBtn->setPosition(STVisibleRect::getPointOfSceneRightBottom() + Vec2(-15-nextBtn->getContentSize().width/2.0, 15+nextBtn->getContentSize().height/2.0));
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-    nextBtn->setPositionY(nextBtn->getPositionY()+GameController::getInstance()->getBannerSize());
-#endif
+//#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+//    nextBtn->setPositionY(nextBtn->getPositionY()+GameController::getInstance()->getBannerSize());
+//#endif
     nextBtn->addTargetWithActionForControlEvents(this, cccontrol_selector(GameLayerBase::onNextButtonClicked), cocos2d::extension::Control::EventType::TOUCH_UP_INSIDE);
     nextBtn->setZoomOnTouchDown(false);
     addChild(nextBtn, kHomeBtn);

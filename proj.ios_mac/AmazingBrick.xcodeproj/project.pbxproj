@@ -660,9 +660,9 @@
 		01BD6DF21B56A83F00294E3D /* Shake.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shake.cpp; sourceTree = "<group>"; };
 		01BD6DF31B56A83F00294E3D /* Shake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shake.h; sourceTree = "<group>"; };
 		01BD6DFC1B56AD2700294E3D /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		01C1F3E31B5E0D6500F0C9FE /* LeaderboardAdaptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeaderboardAdaptor.h; sourceTree = "<group>"; };
 		01C26CF51B53F03B00324FD7 /* GameKitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameKitHelper.h; sourceTree = "<group>"; };
 		01C26CF61B53F03B00324FD7 /* GameKitHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameKitHelper.mm; sourceTree = "<group>"; };
-		01C26CF71B53F03B00324FD7 /* LeaderboardAdaptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeaderboardAdaptor.h; sourceTree = "<group>"; };
 		01C26CF81B53F03B00324FD7 /* LeaderboardAdaptor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LeaderboardAdaptor.mm; sourceTree = "<group>"; };
 		01C26CFB1B53F05300324FD7 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		01C26CFD1B53F19700324FD7 /* sound */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sound; sourceTree = "<group>"; };
@@ -1360,6 +1360,7 @@
 		011EB45C1B44E48A00191CB8 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				01C1F3E31B5E0D6500F0C9FE /* LeaderboardAdaptor.h */,
 				011EB45D1B44E48A00191CB8 /* AdsImpl.cpp */,
 				011EB45E1B44E48A00191CB8 /* AdsImpl.h */,
 				011EB45F1B44E48A00191CB8 /* AlumnAdapter.h */,
@@ -1566,7 +1567,6 @@
 				01C26D001B53FD8900324FD7 /* GKHDelegate.h */,
 				01C26CF51B53F03B00324FD7 /* GameKitHelper.h */,
 				01C26CF61B53F03B00324FD7 /* GameKitHelper.mm */,
-				01C26CF71B53F03B00324FD7 /* LeaderboardAdaptor.h */,
 				01C26CF81B53F03B00324FD7 /* LeaderboardAdaptor.mm */,
 			);
 			name = gamecenter;
@@ -1822,11 +1822,6 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0500;
-				TargetAttributes = {
-					1D6058900D05DD3D006BFB54 = {
-						DevelopmentTeam = L76KY7YU4W;
-					};
-				};
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "AmazingBrick" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2189,6 +2184,7 @@
 					"$(PROJECT_DIR)/ios/Depends/admob/libGoogleAdMobAds.a",
 				);
 				PRODUCT_NAME = "AmazingBrick iOS";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "";
@@ -2237,6 +2233,7 @@
 					"$(PROJECT_DIR)/ios/Depends/admob/libGoogleAdMobAds.a",
 				);
 				PRODUCT_NAME = "AmazingBrick iOS";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "";
@@ -2331,6 +2328,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv6 armv7 i386";
 			};
@@ -2364,6 +2362,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "armv6 armv7 i386";

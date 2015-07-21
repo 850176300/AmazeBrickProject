@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/iap
+END
+STInAppBilling.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/iap/STInAppBilling.cpp
+END
+ST_IAB_Android.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/iap/ST_IAB_Android.cpp
+END
+STIABDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/iap/STIABDelegate.h
+END
+com_common_android_LaunchActivity.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/iap/com_common_android_LaunchActivity.h
+END
+STInAppBilling.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/iap/STInAppBilling.h
+END
+ST_IAB_Android.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/iap/ST_IAB_Android.h
+END
+com_common_android_LaunchActivity.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/make/!svn/ver/35374/trunk/DONUT4013/proj.android/jni/iap/com_common_android_LaunchActivity.cpp
+END

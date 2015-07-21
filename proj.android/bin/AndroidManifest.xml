@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.fmaker.gamexx"
+      package="com.kekestudio.amazingcircle"
       android:versionCode="1"
       android:versionName="1.0"
       android:installLocation="auto">
@@ -27,7 +27,7 @@
     <application android:label="@string/app_name"
                  android:icon="@drawable/icon">
 					 
-        <activity android:name="org.cocos2dx.cpp.AppActivity"
+        <activity android:name="com.kekestudio.amazingcircle.AppActivity"
                   android:label="@string/app_name"
                   android:screenOrientation="landscape"
                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
@@ -38,43 +38,40 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- Mopub Ads -->
-        <activity
-            android:name="com.mopub.mobileads.MoPubActivity"
-            android:configChanges="keyboardHidden|orientation" />
-        <activity
-            android:name="com.mopub.mobileads.MraidActivity"
-            android:configChanges="keyboardHidden|orientation" />
+
+        <activity 
+		    android:name="com.mopub.mobileads.MoPubActivity" 
+		    android:configChanges="keyboardHidden|orientation|screenSize"/>
+		<activity 
+		    android:name="com.mopub.mobileads.MraidActivity" 
+		    android:configChanges="keyboardHidden|orientation|screenSize"/>
+		<activity 
+		    android:name="com.mopub.common.MoPubBrowser" 
+		    android:configChanges="keyboardHidden|orientation|screenSize"/>
+		<activity 
+		    android:name="com.mopub.mobileads.MraidVideoPlayerActivity" 
+		    android:configChanges="keyboardHidden|orientation|screenSize"/>
+		<activity 
+		    android:name="com.google.ads.AdActivity" 
+		    android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+		<activity 
+		    android:name="com.google.android.gms.ads.AdActivity" 
+		    android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+		<activity 
+		    android:name="com.inmobi.androidsdk.IMBrowserActivity"  
+		    android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize" 
+		    android:theme="@android:style/Theme.Translucent.NoTitleBar" 
+		    android:hardwareAccelerated="true" />
         <activity
             android:name="com.mopub.mobileads.MraidBrowser"
             android:configChanges="keyboardHidden|orientation" />
-        <service android:name="com.common.android.analytics.AnalyticsService" android:process=":Analytics" />
-        <!-- Amazon Ads -->
         <activity
-            android:name="com.amazon.device.ads.AdActivity"
+            android:name="com.amazon.device.ads.MraidBrowser"
+            android:configChanges="keyboardHidden|orientation" />
+        <activity
+            android:name="com.amazon.device.ads.VideoActionHandler"
             android:configChanges="keyboardHidden|orientation|screenSize" />
-       
-        <activity
-            android:name="com.mopub.common.MoPubBrowser"
-            android:configChanges="keyboardHidden|orientation" />
-        <activity
-            android:name="com.mopub.mobileads.MraidVideoPlayerActivity"
-            android:configChanges="keyboardHidden|orientation" />
-        <!-- Admob -->
-        <activity
-            android:name="com.google.android.gms.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@android:style/Theme.Translucent" />
-        
-        <!--财务统计-->
-        <receiver android:name="com.common.android.analytics.AnalyticsReceiver"
-            android:exported="false"
-            android:process=":Analytics"
-            >  
-            <intent-filter>  
-                <action android:name="com.common.analytics.receiver"/>  
-            </intent-filter>  
-        </receiver>
+
         
         <!-- 默认没有开启GCM，只有开启GCM的项目才需要配置此项 -->
         <meta-data
@@ -98,7 +95,7 @@
         <meta-data
             android:name="studioService"
             android:value="" /><!--for example :http://services.XXXXXXX.com-->
-
+        
         <meta-data
             android:name="isNeedSupportOrientation"
             android:value="yes" />
@@ -110,6 +107,13 @@
 	      <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+	    <meta-data
+            android:name="com.google.android.gms.games.APP_ID"
+            android:value="@string/app_id" />   
+                     
+        <meta-data
+	        android:name="com.google.android.gms.appstate.APP_ID"
+	        android:value="@string/app_id"/>
     </application>
 
     
