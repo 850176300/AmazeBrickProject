@@ -25,7 +25,7 @@ Scene* HomeScene::scene(){
 
 bool HomeScene::init(){
     if (GameLayerBase::initWithColor(Color4B::WHITE)) {
-        Sprite* smallTitle = Sprite::create(LocalizeString("res/ui/logo_small.png"));
+        Sprite* smallTitle = Sprite::create("res/ui/logo_small.png");
         smallTitle->setAnchorPoint(Vec2(0.5, 0));
         smallTitle->setPosition(Vec2(STVisibleRect::getCenterOfScene().x, STVisibleRect::getOriginalPoint().y + 140));
         addChild(smallTitle);
@@ -35,29 +35,29 @@ bool HomeScene::init(){
         float deltaHeight = STVisibleRect::getGlvisibleSize().width * 0.18;
         
         gameTitle = new CrippleSprite();
-        gameTitle->init(LocalizeString("res/ui/title.png"), 8);
+        gameTitle->init("res/ui/title.png", 8);
         gameTitle->setPosition(STVisibleRect::getCenterOfScene() + Vec2(0, deltaHeight / 0.618 + gameTitle->getContentSize().height / 2.0));
         gameTitle->scheduleUpdate();
         addChild(gameTitle);
         
         
         
-        MenuItemSprite* play = CocosHelper::menuItemSprite(LocalizeString("res/ui/play.png").c_str());
+        MenuItemSprite* play = CocosHelper::menuItemSprite("res/ui/play.png");
         play->setPosition(STVisibleRect::getCenterOfScene() + Vec2(0, -50));
         play->setTag(kPlayBtn);
         play->setCallback(CC_CALLBACK_1(HomeScene::onButtonsClicked, this));
         
 
-        string soundFile = LocalizeString("res/ui/sound_on.png");
+        string soundFile = "res/ui/sound_on.png";
         if (!SoundPlayer::getInstance()->isMusicOpen()) {
-            soundFile = LocalizeString("res/ui/sound_off.png");
+            soundFile = "res/ui/sound_off.png";
         }
         MenuItemSprite* soundBtn = CocosHelper::menuItemSprite(soundFile.c_str());
         soundBtn->setPosition(play->getPosition() + Vec2(-65, 0 - deltaHeight*0.618 - play->getContentSize().height/2.0 - soundBtn->getContentSize().height / 2.0));
         soundBtn->setTag(kSoundBtn);
         soundBtn->setCallback(CC_CALLBACK_1(HomeScene::onButtonsClicked, this));
         
-        MenuItemSprite* rankBtn = CocosHelper::menuItemSprite(LocalizeString("res/ui/rank.png").c_str());
+        MenuItemSprite* rankBtn = CocosHelper::menuItemSprite("res/ui/rank.png");
         rankBtn->setPosition(soundBtn->getPosition() + Vec2(-80/0.618-rankBtn->getContentSize().width/2.0, 0));
         rankBtn->setTag(kRankBtn);
         rankBtn->setCallback(CC_CALLBACK_1(HomeScene::onButtonsClicked, this));
@@ -83,12 +83,18 @@ bool HomeScene::init(){
         
         _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
         touchListener = listener;
+        log("the ad showing ");
         GameLayerBase::setShowAds(true);
+        log("the ad showing 222");
+
         LeaderboardAdaptor::authenticateLocalPlayer();
         LeaderboardAdaptor::requestScore([=](int score){
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-            UserDefault::getInstance()->setIntegerForKey(kHighestScore, score);
-            UserDefault::getInstance()->flush();
+            int sc = UserDefault::getInstance()->getIntegerForKey(kHighestScore, 0);
+            if (score > sc) {
+                UserDefault::getInstance()->setIntegerForKey(kHighestScore, score);
+                UserDefault::getInstance()->flush();
+            }
 #endif
         });
         return true;
@@ -125,9 +131,9 @@ void HomeScene::onButtonsClicked(cocos2d::Ref *pRef) {
         case kSoundBtn:
         {
             SoundPlayer::getInstance()->switchVolume();
-            string soundFile = LocalizeString("res/ui/sound_on.png");
+            string soundFile = "res/ui/sound_on.png";
             if (!SoundPlayer::getInstance()->isMusicOpen()) {
-                soundFile = LocalizeString("res/ui/sound_off.png");
+                soundFile = "res/ui/sound_off.png";
             }
             Sprite* spr = Sprite::create(soundFile);
             Sprite* spr2 = Sprite::create(soundFile);

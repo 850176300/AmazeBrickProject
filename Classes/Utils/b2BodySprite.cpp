@@ -151,8 +151,8 @@ void b2BodySprite::onRecieveEvent(cocos2d::Ref *pRef) {
     __String* data = dynamic_cast<__String*>(pRef);
     if (data->compare("shake") == 0) {
         stopAllActions();
-        _pB2Body->GetWorld()->DestroyBody(_pB2Body);
-        _pB2Body = nullptr;
+//        _pB2Body->GetWorld()->DestroyBody(_pB2Body);
+//        _pB2Body = nullptr;
         this->runAction(Shake::create(0.2, 5));
         return;
     }

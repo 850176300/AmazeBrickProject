@@ -25,11 +25,12 @@
     <!-- IAP for GP only -->
     <uses-permission android:name="com.android.vending.BILLING" />
     <application android:label="@string/app_name"
+        		 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
                  android:icon="@drawable/icon">
 					 
-        <activity android:name="com.kekestudio.amazingcircle.AppActivity"
+        <activity android:name="com.kekestudio.amazingcircle.MainActivity"
                   android:label="@string/app_name"
-                  android:screenOrientation="landscape"
+                  android:screenOrientation="portrait"
                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
                   android:configChanges="orientation">
 
@@ -39,6 +40,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.kekestudio.amazingcircle.AppActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        
+        <activity android:name="com.kekestudio.amazingcircle.NoGPGAppActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        
         <activity 
 		    android:name="com.mopub.mobileads.MoPubActivity" 
 		    android:configChanges="keyboardHidden|orientation|screenSize"/>
@@ -79,7 +88,7 @@
             android:value="4443543" />
         <meta-data
             android:name="Flurry_Key"
-            android:value="Your flurry key" />
+            android:value="ZX6FJBKRYPNMBB9DMCTW" />
         <meta-data
             android:name="MoPub_phone_banner"
             android:value="21f9c00e5d874788ac69e74713fd3e25" />

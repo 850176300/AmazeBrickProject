@@ -26,11 +26,19 @@ THE SOFTWARE.
 ****************************************************************************/
 package com.kekestudio.amazingcircle;
 
+import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 
 import com.common.android.PlatformCode;
+import com.common.android.jni.STMopubAds;
+import com.common.android.jni.STMopubAds.STAmazonAdSize;
+import com.common.android.newsblast.ErrorCode;
+import com.common.android.newsblast.NewsBean;
+import com.common.android.newsblast.NewsBlast;
+import com.common.android.utils.Utils;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
@@ -39,15 +47,15 @@ import com.google.android.gms.games.leaderboard.Leaderboards;
 import com.google.games.basegameutils.BaseGameActivity;
 
 public class AppActivity extends BaseGameActivity {
-    static int currentID;
-    static int currentAchievementID;
-    static boolean gpgAvailable;
+    int currentID;
+    int currentAchievementID;
+    public static boolean gpgAvailable;
     
-    static String[] leaderboardIDs;
-    static String[] achievementIDs;
-    static Context currentContext;
+    String[] leaderboardIDs;
+    String[] achievementIDs;
+    Context currentContext;
     
-    static int currentScore;
+    int currentScore;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,21 +66,53 @@ public class AppActivity extends BaseGameActivity {
         achievementIDs =  achievementIdsRaw.split(";");
         
         currentContext = this;
+		
+		
 		super.onCreate(savedInstanceState);
+		
+		setupNativeEnvironment();
+		
+		setPlatformCode(getPlatformCode());
+		
+		STMopubAds.setup(this, true);	
+
+		nativeInit();
+		
+		STMopubAds.getInstance().setAmazonSizeType(STAmazonAdSize.SIZE_600x90,
+				STAmazonAdSize.SIZE_320x50);
+		// ????????????Banner???????????????
+		if (Utils.isTablet(this))
+			STMopubAds.getInstance().setBannnerAdViewLayoutParams(
+					LayoutParams.MATCH_PARENT, 90,
+					Gravity.CENTER | Gravity.BOTTOM);
+		else
+			STMopubAds.getInstance().setBannnerAdViewLayoutParams(
+					LayoutParams.MATCH_PARENT, 50,
+					Gravity.CENTER | Gravity.BOTTOM);
 	}
 	@Override
 	public int getPlatformCode() {
+		// TODO Auto-generated method stub
 		return PlatformCode.GOOGLEPLAY;
 	}
 
+	
+	@Override
+	protected void init_RateUs() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	@Override
 	public boolean getDebugMode() {
-		return true;
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
 	public boolean enableEvent() {
-		return !getDebugMode();
+		// TODO Auto-generated method stub
+		return true;
 	}
 	
 	@Override
@@ -86,12 +126,12 @@ public class AppActivity extends BaseGameActivity {
 		gpgAvailable = true;
 	}
 	
-    static public void openLeaderboard(int leaderboardID){
+   public void openLeaderboard(int leaderboardID){
         currentID = leaderboardID;
    }
    
    /*@brief This function opens the leaderboards ui for an leaderboard id*/
-   static public void openLeaderboardUI(){
+   public void openLeaderboardUI(){
        if(gpgAvailable){
                ((AppActivity)currentContext).runOnUiThread(new Runnable() {
            public void run() {
@@ -101,40 +141,40 @@ public class AppActivity extends BaseGameActivity {
        }
    }
    
-   static public boolean isGPGSupported(){
+   public boolean isGPGSupported(){
        return gpgAvailable;
    }
    
    /*@brief Submits a score to the leaderboard that is currently actvie*/
-   static public void submitScoreToLeaderboard(int score)
+   public void submitScoreToLeaderboard(int score)
    {
        if(gpgAvailable){
        Games.Leaderboards.submitScore(((AppActivity)currentContext).getGameHelper().getApiClient(),leaderboardIDs[currentID],score);
        }
    }
    
-   static public void requestScoreFromLeaderboard()
+   public void requestScoreFromLeaderboard()
    {
        if(gpgAvailable){
            Games.Leaderboards.loadCurrentPlayerLeaderboardScore(((AppActivity)currentContext).getGameHelper().getApiClient(), leaderboardIDs[currentID], LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
                @Override
                public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
                    if (scoreResult.getStatus().getStatusCode() == GamesStatusCodes.STATUS_OK) {
-                       AppActivity.currentScore = (int)scoreResult.getScore().getRawScore();
-                       AppActivity.callCppCallback();
+                       currentScore = (int)scoreResult.getScore().getRawScore();
+                       callCppCallback(currentScore);
                    }
                }
            });
        }
    }
 
-   static public int collectScore()
+   public int collectScore()
    {
-       return AppActivity.currentScore;
+       return currentScore;
    }
    
     /*@brief Shows the achievements ui*/
-   static public void showAchievements() {
+   public void showAchievements() {
        if(gpgAvailable){
        ((AppActivity)currentContext).runOnUiThread(new Runnable() {
            public void run() {
@@ -146,22 +186,23 @@ public class AppActivity extends BaseGameActivity {
    
    /*@brief Changes the actvie Achievement
      @param The index of the achievement in the list*/
-   static public void openAchievement(int achievementID){
+   public void openAchievement(int achievementID){
        currentAchievementID = achievementID;
    }
    
-   static public void updateAchievement(int percentage){
+   public void updateAchievement(int percentage){
        if(gpgAvailable){
       Games.Achievements.unlock(((AppActivity)currentContext).getGameHelper().getApiClient(), achievementIDs[currentAchievementID]);
        }
    }
    
-   static public void exitGame()
+   public void exitGame()
    {
        Intent intent = new Intent(currentContext, MainActivity.class);
        MainActivity.exiting=true;
        currentContext.startActivity(intent);
    }
    
-   static public native void callCppCallback();
+   public native void callCppCallback(int score);
+   public native void nativeInit();
 }

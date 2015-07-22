@@ -24,50 +24,80 @@ Created by Adrian Dawid on 17.08.14.
 
 #include <iostream>
 #include "cocos2d.h"
-#include <map>
-#include <functional>
 
-#include "platform/android/jni/JniHelper.h"
-#include <jni.h>
-#include <android/log.h>
+#include "ST_JNI_Helper.h"
+
 
 class GameSharing{
 public:
-    /**@brief This function must be called on iOS, for it calls the signInPlayer() function,
-     it has no effect on android, so don't call it if your app only runs on android*/
-    static void initGameSharing();
-    /**@brief This method submits a score to the current leaderboard*/
-    static void SubmitScore(int score,int leaderboardId = 0);
-    /**@brief This method opens the leaderboards UI for the current board*/
-    static void ShowLeaderboards(int leaderbaordID = 0);
-    /**@brief This method unlocks an achivement
-     @param ID: The index of the achivement in your list.*/
-    static void UnlockAchivement(int ID);
-    /**@brief Shows the achievements window*/
-    static void ShowAchievementsUI();
-    /**@brief Closes the game, don't use Director::end() with GameSharing*/
-    static void ExitGame();
-    /**@brief Checks if GPG is available*/
-    static bool IsGPGAvailable();
-    /**@brief Sets the error handling method.*/
-    static void SetErrorHandler(std::function<void()> handler);
-    /**@brief Sets the error handling method.*/
-    static void ActivateStdErrorHandler();
-    /**@brief If the IsGPGAvailable method was called it is not requiered to call again.*/
-    static bool wasGPGAvailableCalled;
-    /**@brief Return value of the IsGPGAvaiblable function.*/
-    static bool bIsGPGAvailable;
-    /**@brief A function, that shall be called when an error is encountered.*/
-    static std::function<void()> errorHandler;
-    /**@brief Requests the current score from the leaderboard, if the 2nd argument is specified, the function pointer will be called once the request was answered.*/
-    static void RequestCurrentScoreFromLeaderboard(int leaderboardID,std::function<void(int)> callback = NULL);
-    /**@brief The score of the current player, THIS VALUE IS ONLY SET ONCE RequestCurrentScoreFromLeaderboard WAS CALLED.*/
-    static int localPlayerScore;
-    /**@brief Is the request being processed? If the process failed, the localPlayerScore is -1.*/
-    static bool requestIsBeingProcessed;
-    /**@brief The callback of the score request, it will be called on the main thread*/
-    static std::function<void(int)> requestCallback;
-    
+	
+	GameSharing():		
+			ClassSF(0),
+			stSFJava(0),
+			MethodSubmitScore(0),
+			MethodShowLeaderboards(0),
+			MethodOpenAchivement(0),
+			MethodUpdateAchivement(0),
+			MethodShowAchievementsUI(0),
+			MethodExitGame(0),
+			MethodIsGPGAvailable(0),
+			MethodRequestCurrentScore(0),
+			MethodCallFunc(0),
+			MethodopenLeaderboardUI(0){
+				bIsGPGAvailable = true;
+				wasGPGAvailableCalled = false;
+				errorHandler = nullptr;
+				localPlayerScore = -1;
+				requestIsBeingProcessed = false;
+				requestCallback = nullptr;
+			}
+		
+	static GameSharing* getInstance();
+	
+    bool initGameSharing(JNIEnv * pEnv, jobject pJava);
+	
+	void callThefunction(int score);
+
+    void SubmitScore(int score,int leaderboardId = 0);
+
+    void ShowLeaderboards(int leaderbaordID = 0);
+
+    void UnlockAchivement(int ID);
+
+    void ShowAchievementsUI();
+
+    void ExitGame();
+
+    bool IsGPGAvailable();
+
+    void SetErrorHandler(std::function<void()> handler);
+
+    void ActivateStdErrorHandler();
+
+    void RequestCurrentScoreFromLeaderboard(int leaderboardID,std::function<void(int)> callback = NULL);
+	
+private:
+    std::function<void(int)> requestCallback;
+	std::function<void()> errorHandler;
+    bool wasGPGAvailableCalled;
+    bool bIsGPGAvailable;
+    int localPlayerScore;
+    bool requestIsBeingProcessed;
+	//method id
+	jclass ClassSF;
+	// Cached java object
+	jobject stSFJava;
+	// Cached active Methods.
+	jmethodID MethodSubmitScore;
+	jmethodID MethodShowLeaderboards;
+	jmethodID MethodopenLeaderboardUI;
+	jmethodID MethodOpenAchivement;
+	jmethodID MethodUpdateAchivement;
+	jmethodID MethodShowAchievementsUI;
+	jmethodID MethodExitGame;
+	jmethodID MethodIsGPGAvailable;
+	jmethodID MethodRequestCurrentScore;
+	jmethodID MethodCallFunc;
     
 };
 

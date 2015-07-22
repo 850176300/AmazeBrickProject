@@ -317,7 +317,7 @@
   jni/../../cocos2dx/cocos2d/cocos/./deprecated/CCBool.h \
   jni/../../cocos2dx/cocos2d/cocos/./deprecated/CCNotificationCenter.h \
   jni/../../cocos2dx/cocos2d/cocos/./deprecated/CCDeprecated.h \
-  jni/../../cocos2dx/cocos2d/cocos/./platform/android/jni/JniHelper.h
+  jni/../../proj.android/jni/utils/ST_JNI_Helper.h
 
 jni/../../proj.android/jni/utils/GameSharing.h:
 
@@ -953,4 +953,4 @@ jni/../../cocos2dx/cocos2d/cocos/./deprecated/CCNotificationCenter.h:
 
 jni/../../cocos2dx/cocos2d/cocos/./deprecated/CCDeprecated.h:
 
-jni/../../cocos2dx/cocos2d/cocos/./platform/android/jni/JniHelper.h:
+jni/../../proj.android/jni/utils/ST_JNI_Helper.h:

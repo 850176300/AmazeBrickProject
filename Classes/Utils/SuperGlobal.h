@@ -25,14 +25,10 @@ string LocalizeString(const string& str){
     string temp = string(str);
     if (currentType == LanguageType::ENGLISH) {
         string en = temp.replace(str.size() - 4, str.size() - 1, "_en.png");
-        if (STFileUtility::isFileExist(FileUtils::getInstance()->fullPathForFilename(en))) {
-            return en;
-        }
+        return en;
     }else if (currentType == LanguageType::CHINESE){
         string zh = temp.replace(str.size() - 4, str.size() - 1, "_zh.png");
-        if (STFileUtility::isFileExist(FileUtils::getInstance()->fullPathForFilename(zh))) {
-            return zh;
-        }
+        return zh;
     }
     return str;
 

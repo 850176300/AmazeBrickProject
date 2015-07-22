@@ -23,98 +23,150 @@
 
 #include "GameSharing.h"
 
-USING_NS_CC;
 
-bool GameSharing::bIsGPGAvailable = true;
-bool GameSharing::wasGPGAvailableCalled = false;
-std::function<void()> GameSharing::errorHandler = nullptr;
-int GameSharing::localPlayerScore = -1;
-bool GameSharing::requestIsBeingProcessed = false;
-std::function<void(int)> GameSharing::requestCallback = nullptr;
+static GameSharing* sp_GameSharing = 0;
 
+GameSharing* GameSharing::getInstance(){
+	if (!sp_GameSharing)
+	{
+		sp_GameSharing = new GameSharing();
+	}
 
-
-
-extern "C"
-{
-    JNIEXPORT void JNICALL Java_com_kekestudio_amazingcircle_AppActivity_callCppCallback(JNIEnv* env, jobject thiz);
-
-};
-
-JNIEXPORT void JNICALL Java_com_kekestudio_amazingcircle_AppActivity_callCppCallback(JNIEnv* env, jobject thiz)
-{
-    int newScore = 0;
-    JniMethodInfo t;
-    if (JniHelper::getStaticMethodInfo(t
-                                     , "com/kekestudio/amazingcircle/AppActivity"
-                                     , "collectScore"
-                                     , "()I"))
-    {
-        newScore = t.env->CallStaticIntMethod(t.classID, t.methodID);
-    }
-    GameSharing::localPlayerScore = newScore;
-    GameSharing::requestIsBeingProcessed = false;
-    if(GameSharing::requestCallback)
-    {
-          GameSharing::requestCallback(newScore);
-    }
-
+	return sp_GameSharing;
 }
 
 
-void GameSharing::initGameSharing(){
-    
+bool GameSharing::initGameSharing(JNIEnv * pEnv, jobject pJava){
+	ClassSF = pEnv->GetObjectClass(pJava);
+	if (!ClassSF)
+	{
+		LOGE("get GameSharing class Failed!");
+		return false;
+	}
+	ClassSF = (jclass) ST_JNI_Helper::makeGlobalRef(pEnv, ClassSF);
+	
+	
+	MethodCallFunc = pEnv->GetMethodID(ClassSF, "collectScore", "()I");
+	if (!MethodCallFunc)
+	{
+		LOGE("get MethodCallFunc id Failed!");
+		return false;
+	}
+	
+	
+	MethodSubmitScore = pEnv->GetMethodID(ClassSF, "submitScoreToLeaderboard", "(I)V");
+	if (!MethodSubmitScore)
+	{
+		LOGE("get MethodSubmitScore id Failed!");
+		return false;
+	}
+	
+	MethodShowLeaderboards = pEnv->GetMethodID(ClassSF, "openLeaderboard", "(I)V");
+	if (!MethodShowLeaderboards)
+	{
+		LOGE("get MethodShowLeaderboards id Failed!");
+		return false;
+	}
+	
+	MethodopenLeaderboardUI = pEnv->GetMethodID(ClassSF, "openLeaderboardUI", "()V");
+	if (!MethodopenLeaderboardUI)
+	{
+		LOGE("get MethodopenLeaderboardUI id Failed!");
+		return false;
+	}
+	
+	MethodOpenAchivement = pEnv->GetMethodID(ClassSF, "openAchievement", "(I)V");
+	if (!MethodOpenAchivement)
+	{
+		LOGE("get MethodOpenAchivement id Failed!");
+		return false;
+	}
+	
+	MethodUpdateAchivement = pEnv->GetMethodID(ClassSF, "updateAchievement", "(I)V");
+	if (!MethodUpdateAchivement)
+	{
+		LOGE("get MethodUpdateAchivement id Failed!");
+		return false;
+	}
+	
+	MethodShowAchievementsUI = pEnv->GetMethodID(ClassSF, "showAchievements", "()V");
+	if (!MethodShowAchievementsUI)
+	{
+		LOGE("get MethodShowAchievementsUI id Failed!");
+		return false;
+	}
+	
+	
+	MethodExitGame = pEnv->GetMethodID(ClassSF, "exitGame", "()V");
+	if (!MethodExitGame)
+	{
+		LOGE("get MethodExitGame id Failed!");
+		return false;
+	}
+	
+	MethodIsGPGAvailable = pEnv->GetMethodID(ClassSF, "isGPGSupported", "()Z");
+	if (!MethodIsGPGAvailable)
+	{
+		LOGE("get MethodIsGPGAvailable id Failed!");
+		return false;
+	}
+	
+	MethodRequestCurrentScore = pEnv->GetMethodID(ClassSF, "requestScoreFromLeaderboard", "()V");
+	if (!MethodRequestCurrentScore)
+	{
+		LOGE("get MethodRequestCurrentScore id Failed!");
+		return false;
+	}
+	
+	
+	
+	stSFJava = ST_JNI_Helper::makeGlobalRef(pEnv, pJava);
+	if (!stSFJava)
+	{
+		LOGE("Cache stSFJava Failed!");
+		return false;
+	}
+	
+	return true;
+	
 }
 
 void GameSharing::SubmitScore(int score,int leaderboardID)
 {
+	if (!stSFJava)
+	{
+		LOGE("GameSharing::SubmitScore() failed!");
+		return;
+	}
+	
     if(IsGPGAvailable()){
-        JniMethodInfo t;
-        //Is the Java method org.cocos2dx.cpp.AppActivty.openLeaderboard available?
-        if (JniHelper::getStaticMethodInfo(t
-                                           , "com/kekestudio/amazingcircle/AppActivity"
-                                           , "openLeaderboard"
-                                           , "(I)V"))
-        {
-            //Call the method with the leaderboardID as parameter
-            t.env->CallStaticVoidMethod(t.classID, t.methodID, leaderboardID);
-            
-        }
-        //Is the Java method org.cocos2dx.cpp.AppActivty.submitScoreToLeaderboard available?
-        if (JniHelper::getStaticMethodInfo(t
-                                           , "com/kekestudio/amazingcircle/AppActivity"
-                                           , "submitScoreToLeaderboard"
-                                           , "(I)V"))
-        {
-            //Call the method, this actually uploads the score to the leaderboard.
-            t.env->CallStaticVoidMethod(t.classID, t.methodID, score);
-        }
+		JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
+
+		lEnv->CallVoidMethod(stSFJava, MethodShowLeaderboards, leaderboardID);
+
+		lEnv->CallVoidMethod(stSFJava, MethodSubmitScore, score);
     }
+}
+
+void GameSharing::callThefunction(int score){
+	if (requestCallback != nullptr){
+		requestCallback(score);
+	}
 }
 
 void GameSharing::ShowLeaderboards(int id){
 
-    if(IsGPGAvailable()){
-        JniMethodInfo t;
-        //Is the Java method org.cocos2dx.cpp.AppActivty.openLeaderboard available?
-        if (JniHelper::getStaticMethodInfo(t
-                                           , "com/kekestudio/amazingcircle/AppActivity"
-                                           , "openLeaderboard"
-                                           , "(I)V"))
-        {
-            //Call the method, over the JNI.
-            //This changes the current leaderboard ID to id.
-            t.env->CallStaticVoidMethod(t.classID, t.methodID, id);
-        }
-        //Is the Java method org.cocos2dx.cpp.AppActivty.openLeaderboardUI available?
-        if (JniHelper::getStaticMethodInfo(t
-                                           , "com/kekestudio/amazingcircle/AppActivity"
-                                           , "openLeaderboardUI"
-                                           , "()V"))
-        {
-            //Call the method, this actually shows the UI.
-            t.env->CallStaticVoidMethod(t.classID, t.methodID);
-        }
+	if (!stSFJava)
+	{
+		LOGE("GameSharing::UnlockAchivement() failed!");
+		return;
+	}
+    if(IsGPGAvailable()){		
+		JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
+
+		lEnv->CallVoidMethod(stSFJava, MethodShowLeaderboards, id);
+
+		lEnv->CallVoidMethod(stSFJava, MethodopenLeaderboardUI);
     }
     else{
         //Call the user defined error handler.
@@ -125,25 +177,21 @@ void GameSharing::ShowLeaderboards(int id){
 
 void GameSharing::UnlockAchivement(int ID)
 {
-
+	if (!stSFJava)
+	{
+		LOGE("GameSharing::UnlockAchivement() failed!");
+		return;
+	}
+	
     if(IsGPGAvailable())
     {
-        JniMethodInfo t;
-        if (JniHelper::getStaticMethodInfo(t
-                                           , "com/kekestudio/amazingcircle/AppActivity"
-                                           , "openAchievement"
-                                           , "(I)V"))
-        {
-            t.env->CallStaticVoidMethod(t.classID, t.methodID , ID);
-        }
-        JniMethodInfo tmp;
-        if (JniHelper::getStaticMethodInfo(tmp
-                                           , "com/kekestudio/amazingcircle/AppActivity"
-                                           , "updateAchievement"
-                                           , "(I)V"))
-        {
-            tmp.env->CallStaticVoidMethod(tmp.classID, tmp.methodID , 100);
-        }
+		JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
+
+		lEnv->CallVoidMethod(stSFJava, MethodOpenAchivement, ID);
+
+		lEnv->CallVoidMethod(stSFJava, MethodUpdateAchivement, ID);
+	
+	
     }
     else{
         errorHandler();
@@ -153,15 +201,17 @@ void GameSharing::UnlockAchivement(int ID)
 
 void GameSharing::ShowAchievementsUI(){
 
+	if (!stSFJava)
+	{
+		LOGE("GameSharing::ShowAchievementsUI() failed!");
+		return;
+	}
+
     if(IsGPGAvailable()){
-        JniMethodInfo t;
-        if (JniHelper::getStaticMethodInfo(t
-                                           , "com/kekestudio/amazingcircle/AppActivity"
-                                           , "showAchievements"
-                                           , "()V"))
-        {
-            t.env->CallStaticVoidMethod(t.classID, t.methodID);
-        }
+
+		JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
+
+		lEnv->CallVoidMethod(stSFJava, MethodShowAchievementsUI);
     }
     else{
         errorHandler();
@@ -170,54 +220,57 @@ void GameSharing::ShowAchievementsUI(){
 }
 
 bool GameSharing::IsGPGAvailable(){
-    bool tmp = false;
+	if (!stSFJava)
+	{
+		LOGE("GameSharing::IsGPGAvailable() failed!");
+		return "";
+	}
 
-    JniMethodInfo t;
-    if (JniHelper::getStaticMethodInfo(t
-                                       , "com/kekestudio/amazingcircle/AppActivity"
-                                       , "isGPGSupported"
-                                       , "()Z"))
-    {
-        tmp = t.env->CallStaticBooleanMethod(t.classID, t.methodID);
-    }
+	JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
+
+	jboolean ret = lEnv->CallBooleanMethod(stSFJava, MethodIsGPGAvailable);
+	return (ret == JNI_TRUE ? true : false);
 
 }
 
 void GameSharing::ExitGame(){
 
-    JniMethodInfo t;
+	if (!stSFJava)
+	{
+		LOGE("GameSharing::ExitGame() failed!");
+		return;
+	}
 
-    if (JniHelper::getStaticMethodInfo(t
-                                       , "com/kekestudio/amazingcircle/AppActivity"
-                                       , "exitGame"
-                                       , "()V"))
-    {
-        t.env->CallStaticVoidMethod(t.classID, t.methodID);
-    }
+	JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
+
+	lEnv->CallVoidMethod(stSFJava, MethodExitGame);
 
 }
 
 
 void GameSharing::ActivateStdErrorHandler(){
 
-    SetErrorHandler([]() -> void{
-        MessageBox("A problem with Google Play Games was encountered.", "Error");
-        return;
-    });
+	LOGE("get ActivateStdErrorHandler id Failed!!!!!!!!!");
+    if (errorHandler != nullptr) {
+    	errorHandler();
+    }
 
 }
 
 void GameSharing::RequestCurrentScoreFromLeaderboard(int leaderboardID,std::function<void(int)> callback)
 {
+	if (!stSFJava)
+	{
+		LOGE("GameSharing::RequestCurrentScoreFromLeaderboard() failed!");
+		return;
+	}
+	
+	JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
 
-    JniMethodInfo t;
-    if (JniHelper::getStaticMethodInfo(t
-                                   , "com/kekestudio/amazingcircle/AppActivity"
-                                   , "requestScoreFromLeaderboard"
-                                   , "()V"))
-    {
-        t.env->CallStaticVoidMethod(t.classID, t.methodID);
-    }
+	lEnv->CallVoidMethod(stSFJava, MethodShowLeaderboards, leaderboardID);//绗�涓�姝ュ�����寮����琛�姒�
+	
+	lEnv->CallVoidMethod(stSFJava, MethodRequestCurrentScore);
+	
     requestIsBeingProcessed = true;
 
     if(callback)

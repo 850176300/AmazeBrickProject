@@ -51,28 +51,28 @@ bool FinishScene::init(){
         label2->setTextColor(Color4B(0, 0, 0, 255));
         gameTitle->addChild(label2);
         
-        Sprite* smallTitle = Sprite::create(LocalizeString("res/ui/end.png"));
+        Sprite* smallTitle = Sprite::create("res/ui/end.png");
         smallTitle->setAnchorPoint(Vec2(0.5, 0));
         smallTitle->setPosition(Vec2(STVisibleRect::getCenterOfScene().x, gameTitle->getPositionY()+gameTitle->getContentSize().height / 2.0 + deltaHeight/2.5+smallTitle->getContentSize().height / 2.0));
         addChild(smallTitle);
         
         
-        MenuItemSprite* play = CocosHelper::menuItemSprite(LocalizeString("res/ui/play.png").c_str());
+        MenuItemSprite* play = CocosHelper::menuItemSprite("res/ui/play.png");
         play->setPosition(gameTitle->getPosition() + Vec2(0, -gameTitle->getContentSize().height / 2.0-play->getContentSize().height/2.0 - deltaHeight/1.8));
         play->setTag(kPlayBtn);
         play->setCallback(CC_CALLBACK_1(FinishScene::onButtonsClicked, this));
         
         
-        string soundFile = LocalizeString("res/ui/sound_on.png");
+        string soundFile = "res/ui/sound_on.png";
         if (!SoundPlayer::getInstance()->isMusicOpen()) {
-            soundFile = LocalizeString("res/ui/sound_off.png");
+            soundFile = "res/ui/sound_off.png";
         }
         MenuItemSprite* soundBtn = CocosHelper::menuItemSprite(soundFile.c_str());
         soundBtn->setPosition(play->getPosition() + Vec2(-65, 0 - deltaHeight*0.618/1.5 - play->getContentSize().height/2.0 - soundBtn->getContentSize().height / 2.0));
         soundBtn->setTag(kSoundBtn);
         soundBtn->setCallback(CC_CALLBACK_1(FinishScene::onButtonsClicked, this));
         
-        MenuItemSprite* rankBtn = CocosHelper::menuItemSprite(LocalizeString("res/ui/rank.png").c_str());
+        MenuItemSprite* rankBtn = CocosHelper::menuItemSprite("res/ui/rank.png");
         rankBtn->setPosition(soundBtn->getPosition() + Vec2(-80/0.618-rankBtn->getContentSize().width/2.0, 0));
         rankBtn->setTag(kRankBtn);
         rankBtn->setCallback(CC_CALLBACK_1(FinishScene::onButtonsClicked, this));
@@ -149,9 +149,9 @@ void FinishScene::onButtonsClicked(cocos2d::Ref *pRef) {
         case kSoundBtn:
         {
             SoundPlayer::getInstance()->switchVolume();
-            string soundFile = LocalizeString("res/ui/sound_on.png");
+            string soundFile = "res/ui/sound_on.png";
             if (!SoundPlayer::getInstance()->isMusicOpen()) {
-                soundFile = LocalizeString("res/ui/sound_off.png");
+                soundFile = "res/ui/sound_off.png";
             }
             Sprite* spr = Sprite::create(soundFile);
             Sprite* spr2 = Sprite::create(soundFile);
