@@ -17,6 +17,7 @@
 #include "BlockComponent.h"
 #include "STAds.h"
 #include "LeaderboardAdaptor.h"
+
 #define ColorCount 6
 #define PTM_RATIO 32.0
 USING_NS_ST;
@@ -114,8 +115,6 @@ bool Box2dLayer::init(){
         pMenu->setPosition(Vec2::ZERO);
         addChild(pMenu, 100);
         
-        STAds ads;
-        ads.requestAds();
         return true;
     }
     return false;
@@ -381,6 +380,7 @@ void Box2dLayer::addBrickBody(){
     tipSprite->setAnchorPoint(Vec2(0.5, 0));
     tipSprite->setPosition(STVisibleRect::getCenterOfScene().x, STVisibleRect::getCenterOfScene().y - 50 + 32);
     addChild(tipSprite, 12);
+    backClickCount = 1;
     
     Sprite* start = Sprite::create(LocalizeString("res/ui/start.png"));
     start->setPosition(Vec2(tipSprite->getContentSize().width / 2.0, -130));
@@ -398,6 +398,7 @@ void Box2dLayer::onTouchesBegan(const std::vector<Touch *> &touches, cocos2d::Ev
             tipSprite->runAction(Sequence::create(EaseSineInOut::create(FadeOut::create(0.2f)), CallFunc::create([=]{
                 tipSprite->removeFromParent();
                 tipSprite = nullptr;
+                backClickCount = 0;
             }), NULL));
         }
         if (touch->getLocation().x > Director::getInstance()->getVisibleOrigin().x + Director::getInstance()->getVisibleSize().width / 2.0) {
@@ -489,12 +490,35 @@ void Box2dLayer::onPauseLayerButtonClick(cocos2d::Ref *pRef) {
     Node* pNode = dynamic_cast<Node*>(pRef);
     SoundPlayer::getInstance()->playCommonEffect("sound/click.wav");
     if (pNode->getTag() == kPlayBtn) {
-        pauseLayer->runAction(Sequence::create(ScaleTo::create(0.5, 0), CallFunc::create([=]{
+        pauseLayer->runAction(Sequence::create(FadeOut::create(0.3f), CallFunc::create([=]{
             pauseLayer->removeFromParent();
             pauseLayer=nullptr;
+            backClickCount = 0;
         }), NULL));
         brickSprite->resume();
     }else {
         replaceTheScene<HomeScene>();
     }
+}
+
+void Box2dLayer::onEnter(){
+    Layer::onEnter();
+    KeypadDispatchCenter::getInstance()->addDelegate(this);
+}
+
+void Box2dLayer::onExit(){
+    KeypadDispatchCenter::getInstance()->removeDelegate(this);
+    Layer::onExit();
+    
+}
+
+void Box2dLayer::onKeyBackClicked(){
+    backClickCount++;
+    if (backClickCount == 1) {
+        addPauseLayer(nullptr);
+    }else if (backClickCount == 2){
+        replaceTheScene<HomeScene>();
+    }
+    
+    
 }

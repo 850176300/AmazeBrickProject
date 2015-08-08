@@ -19,34 +19,53 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="com.kekestudio.daydayup.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" /> 
+    
     <!-- IAP for GP only -->
     <uses-permission android:name="com.android.vending.BILLING" />
-    <application android:label="@string/app_name"
-        		 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-                 android:icon="@drawable/icon">
+    <application 
+        android:name="cn.afterwind.gamecenter.application.MyApplication"
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+        android:icon="@drawable/icon">
 					 
-        <activity android:name="com.kekestudio.amazingcircle.MainActivity"
+        <activity android:name="com.kekestudio.amazingcircle.AppActivity"
                   android:label="@string/app_name"
                   android:screenOrientation="portrait"
                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-                  android:configChanges="orientation">
+                  android:configChanges="orientation"
+                  android:launchMode="singleTask">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="com.kekestudio.amazingcircle.AppActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
         
-        <activity android:name="com.kekestudio.amazingcircle.NoGPGAppActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <meta-data
+            android:name="KTPLAY_CHANNELID"
+            android:value="GP"
+            />
+		<activity
+            android:name="cn.afterwind.gamecenter.view.LeaderboardActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Light.Dialog"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         
         <activity 
 		    android:name="com.mopub.mobileads.MoPubActivity" 
@@ -81,6 +100,30 @@
             android:name="com.amazon.device.ads.VideoActionHandler"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
+        <activity
+            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+
+        <!-- qq -->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tencent1101152753" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+       
         
         <!-- 默认没有开启GCM，只有开启GCM的项目才需要配置此项 -->
         <meta-data
@@ -101,6 +144,14 @@
         <meta-data
             android:name="MoPub_tablet_fullscreen"
             android:value="185e4e5d31dd42a4825fad3b646d067c" />
+        <meta-data
+            android:name="MoPub_phone_crosspromo"
+            android:value="4a24c3f86a544f2dbc9109c38f74f3dd" />
+        <meta-data
+            android:name="MoPub_tablet_crosspromo"
+            android:value="185e4e5d31dd42a4825fad3b646d067c" />
+        
+        
         <meta-data
             android:name="studioService"
             android:value="" /><!--for example :http://services.XXXXXXX.com-->
@@ -123,6 +174,28 @@
         <meta-data
 	        android:name="com.google.android.gms.appstate.APP_ID"
 	        android:value="@string/app_id"/>
+        
+        
+       <meta-data
+            android:name="FRAME_NAME"
+            android:value="UPUP" />
+
+        <service
+            android:name="com.sina.weibo.sdk.net.DownloadService"
+            android:exported="false" />
+               <meta-data
+            android:name="FRAME_KEY0"
+            android:value="huvqPjDM.YElGAGP8bq0%3Afp%2FIV" /> <!-- 测试环境 -->
+
+        <meta-data
+            android:name="FRAME_KEY1"
+            android:value="huvqPjDM.YElGAGP8bq0%3Afp%2FIV" /> <!--  -->
+
+
+        <!-- https://api.weixin.qq.com -->
+        <meta-data
+            android:name="FRAME_KEY2"
+            android:value="huvq.QDk%2F.254os7uz74G0r4F" />
     </application>
 
     

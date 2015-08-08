@@ -25,7 +25,8 @@ class HomeScene : public GameLayerBase{
         kPlayBtn = 11,
         kRateBtn,
         kSoundBtn,
-        kRankBtn
+        kRankBtn,
+        kShareBtn
     };
 public:
     static Scene* scene();
@@ -40,6 +41,7 @@ protected:
     virtual void onTouchMoved(Touch *touch, Event *unused_event);
     virtual void onTouchEnded(Touch *touch, Event *unused_event){};
     virtual void onTouchCancelled(Touch *touch, Event *unused_event){};
+    void onKeyBackClicked();
 private:
     CrippleSprite* gameTitle = nullptr;
     Menu* btnsMenu = nullptr;

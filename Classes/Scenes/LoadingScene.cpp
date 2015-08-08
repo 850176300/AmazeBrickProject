@@ -27,7 +27,6 @@ bool LoadingScene::init(){
         
         logo = new CrippleSprite();//Sprite::create("res/ui/logo.png");
         logo->init("res/ui/logo.png", 8);
-//        logo->setPosition(Vec2(STVisibleRect::getCenterOfScene().x - STVisibleRect::getGlvisibleSize().width, STVisibleRect::getCenterOfScene().y));
         logo->setPosition(STVisibleRect::getCenterOfScene());
         logo->scheduleUpdate();
         addChild(logo);

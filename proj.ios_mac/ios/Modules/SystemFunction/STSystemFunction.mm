@@ -139,3 +139,6 @@ int STSystemFunction::getScreenRotation(){
     return 0;
 }
 
+bool STSystemFunction::getIsSupportGoogle(){
+    return true;
+}

@@ -81,15 +81,10 @@ void GameLayerBase::setShowAds(bool isShow) {
 void GameLayerBase::onEnter(){
     KeypadBaseLayer::onEnter();
     if (isShowAds) {
-//        if (PurchaseManager::getInstance()->getRemoveAd() == false) {
-            STAds ads;
-            ads.requestAds();
-
-//        }
-    }else {
-//        if (PurchaseManager::getInstance()->getRemoveAd() == false) {
-//        }
+        STAds ads;
+        ads.requestAds();
     }
+
 }
 
 
@@ -207,7 +202,7 @@ void GameLayerBase::setADVisible(bool visible) {
 }
 
 void GameLayerBase::onKeyBackClicked(){
-    showConfirmDialog();
+//    showConfirmDialog();
     log("点击返回键按钮！！");
 
 }

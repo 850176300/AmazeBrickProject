@@ -9,9 +9,19 @@
     <string name="gamehelper_app_misconfigured">The application is incorrectly configured. Check that the package name and signing certificate match the client ID created in Developer Console. Also, if the application is not yet published, check that the account you are trying to sign in with is listed as a tester account. See logs for more information.</string>
     <string name="gamehelper_license_failed">License check failed.</string>
     <string name="gamehelper_unknown_error">Unknown error.</string>
-    <string name="app_id">63945934911</string>
-    <string name="leaderboard_up__up">CgkIv5Dmm-4BEAIQAg</string>
+    <string name="app_id">839678905441</string>
+    <string name="leaderboard_up__up">CgkI4ZiNhrgYEAIQAQ</string>
     <string name="event_up__up_achievement">CgkIv5Dmm-4BEAIQAQ</string>
-    <string name="leaderboards">fdsa</string>
-    <string name="achievements"></string>
+    <string name="share_text">我在安卓手机玩#UP &amp; Up游戏已经跳过%1$d个障碍，快来一起玩吧！下载地址：http://www.wandoujia.com/apps/com.kekestudio.amazingcircle</string>
+    <string name="action_settings">Settings</string>
+    <string name="weibosdk_demo_token_to_string_format">Token：%1$s \nRefresh Token：%2$s \nexpires_in：%3$s</string>
+    <string name="weibosdk_demo_token_to_string_format_1">Token：%1$s \n有效期：%2$s</string>
+    <string name="weibosdk_demo_toast_auth_success">授权成功</string>
+    <string name="weibosdk_demo_toast_auth_failed">授权失败</string>
+    <string name="weibosdk_demo_toast_auth_canceled">取消授权</string>
+    <string name="weibosdk_demo_toast_obtain_code_success">获取 Code 成功</string>
+    <string name="weibosdk_demo_toast_obtain_code_failed">获取 Code 失败</string>
+    <string name="weibosdk_demo_toast_obtain_token_success">获取 Token 成功</string>
+    <string name="weibosdk_demo_toast_obtain_token_failed">获取 Token 失败</string> 
+    
 </resources>

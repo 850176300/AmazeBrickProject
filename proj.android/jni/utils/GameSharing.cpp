@@ -37,6 +37,7 @@ GameSharing* GameSharing::getInstance(){
 
 
 bool GameSharing::initGameSharing(JNIEnv * pEnv, jobject pJava){
+	LOGE("开始创建gameshare");
 	ClassSF = pEnv->GetObjectClass(pJava);
 	if (!ClassSF)
 	{
@@ -126,7 +127,7 @@ bool GameSharing::initGameSharing(JNIEnv * pEnv, jobject pJava){
 		LOGE("Cache stSFJava Failed!");
 		return false;
 	}
-	
+	LOGE("创建gameshare成功");
 	return true;
 	
 }
@@ -139,17 +140,15 @@ void GameSharing::SubmitScore(int score,int leaderboardID)
 		return;
 	}
 	
-    if(IsGPGAvailable()){
-		JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
+	JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
 
-		lEnv->CallVoidMethod(stSFJava, MethodShowLeaderboards, leaderboardID);
+	lEnv->CallVoidMethod(stSFJava, MethodShowLeaderboards, leaderboardID);
 
-		lEnv->CallVoidMethod(stSFJava, MethodSubmitScore, score);
-    }
+	lEnv->CallVoidMethod(stSFJava, MethodSubmitScore, score);
 }
 
 void GameSharing::callThefunction(int score){
-	if (requestCallback != nullptr){
+	if (requestCallback != 0){
 		requestCallback(score);
 	}
 }
@@ -161,17 +160,12 @@ void GameSharing::ShowLeaderboards(int id){
 		LOGE("GameSharing::UnlockAchivement() failed!");
 		return;
 	}
-    if(IsGPGAvailable()){		
-		JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
+	JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
 
-		lEnv->CallVoidMethod(stSFJava, MethodShowLeaderboards, id);
+	lEnv->CallVoidMethod(stSFJava, MethodShowLeaderboards, id);
 
-		lEnv->CallVoidMethod(stSFJava, MethodopenLeaderboardUI);
-    }
-    else{
-        //Call the user defined error handler.
-        errorHandler();
-    }
+	lEnv->CallVoidMethod(stSFJava, MethodopenLeaderboardUI);
+
 
 }
 
@@ -182,20 +176,13 @@ void GameSharing::UnlockAchivement(int ID)
 		LOGE("GameSharing::UnlockAchivement() failed!");
 		return;
 	}
-	
-    if(IsGPGAvailable())
-    {
-		JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
 
-		lEnv->CallVoidMethod(stSFJava, MethodOpenAchivement, ID);
+	JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
 
-		lEnv->CallVoidMethod(stSFJava, MethodUpdateAchivement, ID);
-	
-	
-    }
-    else{
-        errorHandler();
-    }
+	lEnv->CallVoidMethod(stSFJava, MethodOpenAchivement, ID);
+
+	lEnv->CallVoidMethod(stSFJava, MethodUpdateAchivement, ID);
+
 
 }
 
@@ -206,16 +193,9 @@ void GameSharing::ShowAchievementsUI(){
 		LOGE("GameSharing::ShowAchievementsUI() failed!");
 		return;
 	}
+	JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
 
-    if(IsGPGAvailable()){
-
-		JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
-
-		lEnv->CallVoidMethod(stSFJava, MethodShowAchievementsUI);
-    }
-    else{
-        errorHandler();
-    }
+	lEnv->CallVoidMethod(stSFJava, MethodShowAchievementsUI);
 
 }
 
@@ -251,7 +231,7 @@ void GameSharing::ExitGame(){
 void GameSharing::ActivateStdErrorHandler(){
 
 	LOGE("get ActivateStdErrorHandler id Failed!!!!!!!!!");
-    if (errorHandler != nullptr) {
+    if (errorHandler != 0) {
     	errorHandler();
     }
 

@@ -23,7 +23,11 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
+import com.common.android.jni.STSystemFunction;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.kekestudio.amazingcircle.AppActivity;
 
 /**
  * Example base class for games. This implementation takes care of setting up
@@ -73,7 +77,15 @@ public abstract class BaseGameActivity extends Cocos2dxActivity implements
      */
     protected BaseGameActivity(int requestedClients) {
         super();
-        setRequestedClients(requestedClients);
+        Log.e("google play services", "BaseGameActivity");
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+        if (resultCode == ConnectionResult.SUCCESS){
+        	setRequestedClients(requestedClients);
+            Log.e("google play services", "true");
+        }else {
+            Log.e("google play services", "falsely");
+        }
+        
     }
 
     /**
@@ -101,28 +113,45 @@ public abstract class BaseGameActivity extends Cocos2dxActivity implements
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
-        if (mHelper == null) {
-            getGameHelper();
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+        if (resultCode == ConnectionResult.SUCCESS){
+        	if (mHelper == null) {
+                getGameHelper();
+            }
+            mHelper.setup(this);
+        	Log.e("google play services", "true");
+        }else {
+            Log.e("google play services", "falsely");
         }
-        mHelper.setup(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mHelper.onStart(this);
+        if (STSystemFunction.getInstance().isSupportGoogle() == true) {
+        	mHelper.onStart(this);
+            Log.e("google play services", "onStart");
+		}
+        
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mHelper.onStop();
+        if (STSystemFunction.getInstance().isSupportGoogle() == true) {
+        	mHelper.onStop();
+            Log.e("google play services", "onStop");
+		}
+        
     }
 
     @Override
     protected void onActivityResult(int request, int response, Intent data) {
         super.onActivityResult(request, response, data);
-        mHelper.onActivityResult(request, response, data);
+        if (STSystemFunction.getInstance().isSupportGoogle() == true) {
+        	mHelper.onActivityResult(request, response, data);
+		}
+        
     }
 
     protected GoogleApiClient getApiClient() {
@@ -178,4 +207,6 @@ public abstract class BaseGameActivity extends Cocos2dxActivity implements
     protected GameHelper.SignInFailureReason getSignInError() {
         return mHelper.getSignInError();
     }
+    
+    
 }

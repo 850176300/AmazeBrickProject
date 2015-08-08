@@ -12,6 +12,8 @@
 #include "Config.h"
 #include "STAds.h"
 #include "LeaderboardAdaptor.h"
+#include "STSystemFunction.h"
+#include "ShareLayer.h"
 
 Scene* FinishScene::scene(){
     Scene* pScene = Scene::create();
@@ -25,7 +27,7 @@ Scene* FinishScene::scene(){
 
 bool FinishScene::init(){
     if (GameLayerBase::initWithColor(Color4B::WHITE)) {
-
+        setShowAds(false);
         
         Size frameSize = Director::getInstance()->getOpenGLView()->getFrameSize();
         
@@ -72,9 +74,14 @@ bool FinishScene::init(){
         soundBtn->setTag(kSoundBtn);
         soundBtn->setCallback(CC_CALLBACK_1(FinishScene::onButtonsClicked, this));
         
+        STSystemFunction st;
         MenuItemSprite* rankBtn = CocosHelper::menuItemSprite("res/ui/rank.png");
-        rankBtn->setPosition(soundBtn->getPosition() + Vec2(-80/0.618-rankBtn->getContentSize().width/2.0, 0));
         rankBtn->setTag(kRankBtn);
+        if (st.getIsSupportGoogle() == false) {
+            rankBtn = CocosHelper::menuItemSprite("res/ui/share.png");
+            rankBtn->setTag(kShareBtn);
+        }
+        rankBtn->setPosition(soundBtn->getPosition() + Vec2(-80/0.618-rankBtn->getContentSize().width/2.0, 0));
         rankBtn->setCallback(CC_CALLBACK_1(FinishScene::onButtonsClicked, this));
         
         MenuItemSprite* rateBtn = CocosHelper::menuItemSprite(LocalizeString("res/ui/home.png").c_str());
@@ -98,7 +105,7 @@ bool FinishScene::init(){
         
         _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
         touchListener = listener;
-        GameLayerBase::setShowAds(true);
+        
         return true;
     }
     return false;
@@ -162,7 +169,10 @@ void FinishScene::onButtonsClicked(cocos2d::Ref *pRef) {
             break;
         case kRankBtn:
         {
-            LeaderboardAdaptor::showLeaderboard();
+            STSystemFunction st;
+            if (st.getIsSupportGoogle() == true){
+                LeaderboardAdaptor::showLeaderboard();
+            }
         }
             break;
         case kHomeBtn:
@@ -170,7 +180,44 @@ void FinishScene::onButtonsClicked(cocos2d::Ref *pRef) {
             replaceTheScene<HomeScene>();
         }
             break;
+        case kShareBtn:
+        {
+            Sprite* title = Sprite::createWithTexture(gameTitle->getTexture());
+            title->setPosition(gameTitle->getPosition());
+            addChild(title, gameTitle->getLocalZOrder());
+            
+            for (int i = 0; i < gameTitle->getChildrenCount(); ++i) {
+                Label* plabel1 = (Label*)gameTitle->getChildren().at(i);
+                Label* copyLabel = Label::createWithTTF(plabel1->getTTFConfig(), plabel1->getString());
+                copyLabel->setPosition(plabel1->getPosition());
+                copyLabel->setTextColor(plabel1->getTextColor());
+                title->addChild(copyLabel);
+            }
+            RenderTexture* pRender = RenderTexture::create(this->getContentSize().width, this->getContentSize().height, Texture2D::PixelFormat::RGBA8888);
+            
+            gameTitle->setVisible(false);
+            pRender->beginWithClear(0, 0, 0, 255);
+            this->visit();
+            pRender->end();
+            gameTitle->setVisible(true);
+            title->removeFromParent();
+            Director::getInstance()->getRenderer()->render();
+            
+
+            Image* pImage = pRender->newImage();
+            log("%s",(STFileUtility::getStoragePath() + "amazingcircle/temp.png").c_str());
+            pImage->saveToFile(STFileUtility::getStoragePath() + "amazingcircle/temp.png", true);
+            pImage->release();
+            ShareLayer* pLayer = ShareLayer::create();
+            this->addChild(pLayer, 9999);
+        }
+            break;
         default:
             break;
     }
+}
+
+void FinishScene::onKeyBackClicked(){
+    GameLayerBase::onKeyBackClicked();
+    replaceTheScene<HomeScene>();
 }

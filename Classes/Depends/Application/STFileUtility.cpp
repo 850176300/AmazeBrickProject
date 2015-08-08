@@ -16,7 +16,7 @@ bool STFileUtility::createDirectory(const char *path)
 
 	return true;
 #else
-	BOOL ret = CreateDirectoryA(path, NULL);
+	bool ret = CreateDirectoryA(path, NULL);
 	if (!ret && ERROR_ALREADY_EXISTS != GetLastError())
 	{
 		return false;
@@ -68,11 +68,12 @@ bool STFileUtility::createFile(std::string filePath)
 std::string STFileUtility::getStoragePath()
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-	return CCFileUtils::sharedFileUtils()->getWritablePath();
+	return FileUtils::getInstance()->getWritablePath();
 #endif
 #if(CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 	STSystemFunction* sys = new STSystemFunction();
-	std::string path = sys->getSdCardPath();
+	std::string path = sys->getSdCardPath()+"/";
+    log(" the sdcard path is %s", path.c_str());
 	delete sys;
 	return path;
 #endif

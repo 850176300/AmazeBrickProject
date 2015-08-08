@@ -34,7 +34,8 @@ public:
             MethodDismissRateus(0),
             MethodNewsBlast(0),
             MethodRefreshDCIM(0),
-            MethodGetScreenRatation(0)
+            MethodGetScreenRatation(0),
+            MethodGetSupportGoogle(0)
 //            MethodshowActionSheetOne(0),
 //            MethodshowActionSheetTwo(0),
 //            MethodshowActionSheetThree(0),
@@ -76,6 +77,7 @@ public:
 	void endAnalytics();
     void refreshDCIM(std::string sFileDir);
     int getScreenRotation();
+    bool getIsSupportGoogle();
 
 //	void onRecieveSheetAction(int num);
 //	void onRecievePositiveAction();
@@ -112,6 +114,8 @@ private:
     jmethodID MethodEndAnalytics;
     jmethodID MethodRefreshDCIM;
     jmethodID MethodGetScreenRatation;
+    jmethodID MethodGetSupportGoogle;
+
 //    jmethodID MethodshowActionSheetOne;
 //    jmethodID MethodshowActionSheetTwo;
 //    jmethodID MethodshowActionSheetThree;

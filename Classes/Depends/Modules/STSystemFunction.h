@@ -76,7 +76,8 @@ public:
 	void endAnalytics();
     void refreshDCIM(std::string sFileDir);
     
-     virtual int getScreenRotation();
+    virtual int getScreenRotation();
+    bool getIsSupportGoogle();
     //mslab 专用显示more game icon
 //    std::string getMoreGameUrl();
 };

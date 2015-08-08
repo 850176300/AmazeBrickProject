@@ -6,6 +6,8 @@
 #include "SuperGlobal.h"
 #include "LoadingScene.h"
 #include "LeaderboardAdaptor.h"
+#include "STAds.h"
+#include "STAdsImps.h"
 USING_NS_CC;
 USING_NS_ST;
 
@@ -57,7 +59,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     
     replaceTheScene<LoadingScene>();
    
-    
+    STAds ads;
+    ads.setAdsDelegate(STAdsImps::getInstance());
 
     return true;
 }

@@ -46,16 +46,13 @@ LOCAL_WHOLE_STATIC_LIBRARIES += cocosbuilder_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocostudio_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_network_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_extension_static
-LOCAL_WHOLE_STATIC_LIBRARIES += cocos_gpg_static
 
 
 include $(BUILD_SHARED_LIBRARY)
 
 $(call import-module,.)
 $(call import-module,audio/android)
-
 $(call import-module,Box2D)
-$(call import-module,gpg/prebuild/android)
 $(call import-module,editor-support/cocosbuilder)
 # $(call import-module,editor-support/spine)
 $(call import-module,editor-support/cocostudio)

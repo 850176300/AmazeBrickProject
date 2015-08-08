@@ -29,9 +29,10 @@ string LocalizeString(const string& str){
     }else if (currentType == LanguageType::CHINESE){
         string zh = temp.replace(str.size() - 4, str.size() - 1, "_zh.png");
         return zh;
+    }else {
+        string en = temp.replace(str.size() - 4, str.size() - 1, "_en.png");
+        return en;
     }
-    return str;
-
 }
 
 

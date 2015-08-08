@@ -12,7 +12,11 @@
 #include "LeaderboardAdaptor.h"
 #include "STSystemFunction.h"
 #include "Config.h"
-
+#include "ShareLayer.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#include "ActivityManager.h"
+#include "GameSharing.h"
+#endif
 Scene* HomeScene::scene(){
     Scene* pScene = Scene::create();
     
@@ -25,6 +29,7 @@ Scene* HomeScene::scene(){
 
 bool HomeScene::init(){
     if (GameLayerBase::initWithColor(Color4B::WHITE)) {
+        setShowAds(true);
         Sprite* smallTitle = Sprite::create("res/ui/logo_small.png");
         smallTitle->setAnchorPoint(Vec2(0.5, 0));
         smallTitle->setPosition(Vec2(STVisibleRect::getCenterOfScene().x, STVisibleRect::getOriginalPoint().y + 140));
@@ -34,7 +39,7 @@ bool HomeScene::init(){
         
         float deltaHeight = STVisibleRect::getGlvisibleSize().width * 0.18;
         
-        gameTitle = new CrippleSprite();
+        gameTitle = new CrippleSprite();   
         gameTitle->init("res/ui/title.png", 8);
         gameTitle->setPosition(STVisibleRect::getCenterOfScene() + Vec2(0, deltaHeight / 0.618 + gameTitle->getContentSize().height / 2.0));
         gameTitle->scheduleUpdate();
@@ -57,9 +62,15 @@ bool HomeScene::init(){
         soundBtn->setTag(kSoundBtn);
         soundBtn->setCallback(CC_CALLBACK_1(HomeScene::onButtonsClicked, this));
         
+        STSystemFunction st;
         MenuItemSprite* rankBtn = CocosHelper::menuItemSprite("res/ui/rank.png");
-        rankBtn->setPosition(soundBtn->getPosition() + Vec2(-80/0.618-rankBtn->getContentSize().width/2.0, 0));
         rankBtn->setTag(kRankBtn);
+        if (st.getIsSupportGoogle() == false) {
+            rankBtn = CocosHelper::menuItemSprite("res/ui/share.png");
+            rankBtn->setTag(kRankBtn);
+        }
+        rankBtn->setPosition(soundBtn->getPosition() + Vec2(-80/0.618-rankBtn->getContentSize().width/2.0, 0));
+        
         rankBtn->setCallback(CC_CALLBACK_1(HomeScene::onButtonsClicked, this));
         
         MenuItemSprite* rateBtn = CocosHelper::menuItemSprite(LocalizeString("res/ui/rate.png").c_str());
@@ -151,9 +162,48 @@ void HomeScene::onButtonsClicked(cocos2d::Ref *pRef) {
         {
             STSystemFunction st;
             st.rating();
+
         }
             break;
+        case kShareBtn:
+        {
+            Sprite* title = Sprite::createWithTexture(gameTitle->getTexture());
+            title->setPosition(gameTitle->getPosition());
+            addChild(title, gameTitle->getLocalZOrder());
+            gameTitle->setVisible(false);
+            RenderTexture* pRender = RenderTexture::create(this->getContentSize().width, this->getContentSize().height, Texture2D::PixelFormat::RGBA8888);
+            
+            pRender->beginWithClear(0, 0, 0, 255);
+            this->visit();
+            pRender->end();
+            gameTitle->setVisible(true);
+            title->removeFromParent();
+            Director::getInstance()->getRenderer()->render();
+            
+            Image* pImage = pRender->newImage();
+            log("%s",(STFileUtility::getStoragePath() + "amazingcircle/temp.png").c_str());
+            pImage->saveToFile(STFileUtility::getStoragePath() + "amazingcircle/temp.png", true);
+            pImage->release();
+            ShareLayer* pLayer = ShareLayer::create();
+            this->addChild(pLayer, 9999);
+        }
         default:
             break;
     }
+}
+
+void HomeScene::onKeyBackClicked(){
+    GameLayerBase::onKeyBackClicked();
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+//    STSystemFunction st;
+//    if (st.getIsSupportGoogle() == false) {
+//        ActivityManager::getInstance()->exitGame();
+//    }else {
+//        GameSharing::getInstance()->ExitGame();
+//    }
+    
+    
+#endif
+    Director::getInstance()->end();
 }

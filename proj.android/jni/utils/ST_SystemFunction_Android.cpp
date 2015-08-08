@@ -163,33 +163,13 @@ bool SystemFunctionManager::init(JNIEnv * pEnv, jobject pJava)
 		LOGE("get getScreenRotation id Failed!");
 		return false;
 	}
-//	MethodshowActionSheetOne = pEnv->GetMethodID(ClassSF, "showActionSheet", "(Ljava/lang/String;)V");
-//	if (!MethodshowActionSheetOne)
-//	{
-//		LOGE("get showActionSheetOne id Failed!");
-//		return false;
-//	}
-//
-//	MethodshowActionSheetTwo = pEnv->GetMethodID(ClassSF, "showActionSheet", "(Ljava/lang/String;Ljava/lang/String;)V");
-//	if (!MethodshowActionSheetTwo)
-//	{
-//		LOGE("get MethodshowActionSheet2 id Failed!");
-//		return false;
-//	}
-//
-//	MethodshowActionSheetThree = pEnv->GetMethodID(ClassSF, "showActionSheet", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
-//	if (!MethodshowActionSheetThree)
-//	{
-//		LOGE("get MethodshowActionSheet3 id Failed!");
-//		return false;
-//	}
-//
-//	MethodshowAlertView = pEnv->GetMethodID(ClassSF, "showAlertView", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
-//	if (!MethodshowAlertView)
-//	{
-//		LOGE("get MethodshowAlertView id Failed!");
-//		return false;
-//	}
+
+	MethodGetSupportGoogle = pEnv->GetMethodID(ClassSF, "isSupportGoogle", "()Z");
+	if (!MethodGetSupportGoogle)
+	{
+		LOGE("get MethodGetSupportGoogle id Failed!");
+		return false;
+	}
 
     MethodEndAnalytics = pEnv->GetMethodID(ClassSF, "endSession", "()V");
 	if (!MethodEndAnalytics)
@@ -429,6 +409,20 @@ bool SystemFunctionManager::isTabletAvailable()
 	jboolean ret = lEnv->CallBooleanMethod(stSFJava, MethodIsTabletAvailable);
 	return (ret == JNI_TRUE ? true : false);
 }
+
+bool SystemFunctionManager::getIsSupportGoogle(){
+	if (!stSFJava)
+	{
+		LOGE("SystemFunctionManager::getIsSupportGoogle() failed!");
+		return "";
+	}
+
+	JNIEnv* lEnv = ST_JNI_Helper::getJNIEnv();
+
+	jboolean ret = lEnv->CallBooleanMethod(stSFJava, MethodGetSupportGoogle);
+	return (ret == JNI_TRUE ? true : false);
+}
+
 float SystemFunctionManager::densityScale()
 {
 	if (!stSFJava)

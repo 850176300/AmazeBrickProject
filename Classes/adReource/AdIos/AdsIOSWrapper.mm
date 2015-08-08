@@ -154,6 +154,7 @@ static AdsIOSManager *s_instance = nil;
 #pragma interstial delegate
 - (void)interstitialDidFailToLoad: (InterstitialAdType )adType
 {
+    
     if(stAdsDelegate_)
         stAdsDelegate_->onInterstitialAdFailed(-1, adType);
 }

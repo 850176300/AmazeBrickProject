@@ -16,6 +16,7 @@
 #include "Box2dPhysicSprite.h"
 #include "RunComponent.h"
 #include "b2BodySprite.h"
+#include "KeypadDispatchCenter.h"
 USING_NS_CC;
 using namespace std;
 
@@ -23,7 +24,7 @@ using namespace std;
 #define kBrick "brick"
 #define kEdge "edge"
 #define kMonster "monster"
-class Box2dLayer : public Layer, public b2ContactListener, public MoveSpriteDelegate{
+class Box2dLayer : public Layer, public b2ContactListener, public MoveSpriteDelegate, public KeypadDelegate{
     enum MenuItemTag{
         kPlayBtn = 1,
         kHomeBtn,
@@ -42,6 +43,8 @@ public:
     CREATE_FUNC(Box2dLayer);
     
 protected:
+    void onEnter();
+    void onExit();
 //    virtual bool onTouchBegan(Touch *touch, Event *unused_event);
 //    virtual void onTouchMoved(Touch *touch, Event *unused_event){}
 //    virtual void onTouchEnded(Touch *touch, Event *unused_event);
@@ -67,6 +70,7 @@ protected:
     void onGameOver(Ref* pref);
     void addPauseLayer(Ref* pRef);
     void onPauseLayerButtonClick(Ref* pRef);
+    virtual void onKeyBackClicked();
 private:
     Label* scoreLabel;
     b2World* world;
@@ -87,6 +91,7 @@ private:
     Box2dPhysicSprite* smallBrick2 = nullptr;
     Sprite* tipSprite = nullptr;
     LayerColor* pauseLayer = nullptr;
+    int backClickCount = 0;
 };
 
 #endif /* defined(__com_kekeapp_amazebrick__Box2dLayer__) */

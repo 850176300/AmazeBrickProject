@@ -121,6 +121,11 @@ int STSystemFunction::getScreenRotation(){
 	return SystemFunctionManager::getInstance()->getScreenRotation();
 }
 
+bool STSystemFunction::getIsSupportGoogle(){
+
+	return SystemFunctionManager::getInstance()->getIsSupportGoogle();
+}
+
 //void  STSystemFunction::setManagerDelegate(IOSControlDelegate* delegate)
 //{
 //	CCLOG("%s", __func__);

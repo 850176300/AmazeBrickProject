@@ -30,53 +30,69 @@ import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
+
+import cn.afterwind.gamecenter.until.Constants;
 
 import com.common.android.PlatformCode;
 import com.common.android.jni.STMopubAds;
 import com.common.android.jni.STMopubAds.STAmazonAdSize;
-import com.common.android.newsblast.ErrorCode;
-import com.common.android.newsblast.NewsBean;
-import com.common.android.newsblast.NewsBlast;
+import com.common.android.jni.STSystemFunction;
 import com.common.android.utils.Utils;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.Leaderboards;
 import com.google.games.basegameutils.BaseGameActivity;
+import com.google.games.basegameutils.LeaderBoardManager;
 
 public class AppActivity extends BaseGameActivity {
-    int currentID;
-    int currentAchievementID;
+
+    
     public static boolean gpgAvailable;
-    
-    String[] leaderboardIDs;
-    String[] achievementIDs;
-    Context currentContext;
-    
-    int currentScore;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		String leaderboardIdsRaw = getString(R.string.leaderboard_up__up);
-        String achievementIdsRaw = getString(R.string.event_up__up_achievement);
-        
-        leaderboardIDs = leaderboardIdsRaw.split(";");
-        achievementIDs =  achievementIdsRaw.split(";");
-        
-        currentContext = this;
-		
-		
 		super.onCreate(savedInstanceState);
+
+		/**此段id，可以直接复制，无须重新创建*/
+		Constants.LEADERBOARDLAYOUT_ID = R.layout.share;
+		Constants.LEADERBOARDDELETEBTN_ID = R.id.img_delete;
+		Constants.LEADERBOARDTEXT1_ID = R.id.txt_t0;
+		Constants.LEADERBOARDTEXT2_ID = R.id.txt_t1;
+		Constants.LEADERBOARDVIEWPAPER_ID = R.id.viewpager;
+		
+		Constants.RANKFRAMELAYOUT_ID = R.layout.shareframe;
+		Constants.RANKFRAMEQQBTN_ID = R.id.lin_wechat;
+		Constants.RANKFRAMESINABTN_ID = R.id.lin_sina;
+		Constants.RANKFRAMESCROLL_ID = R.id.scrollview;
+		
+		/**下面id为每个项目需要重新配置的id，需要在此处配置*/
+		Constants.APP_KEY = "3976624372";
+		Constants.WX_APP_KEY = "wxdae67bd991dae536";
+		Constants.LB_SECRET_KEY = getApplicationContext().getPackageName();
+		Constants.QQ_APP_ID = "1104802480";
 		
 		setupNativeEnvironment();
 		
 		setPlatformCode(getPlatformCode());
 		
+		LeaderBoardManager.setup(this);
+		
 		STMopubAds.setup(this, true);	
 
-		nativeInit();
+		if (STSystemFunction.getInstance().isSupportGoogle() == false) {
+			WeiboInstance.setup(this);
+			if (savedInstanceState != null) {
+				WeiboInstance.getInstance().handleRespone(getIntent());
+			}
+			WechatInstance.setup(this);
+		}
+		
 		
 		STMopubAds.getInstance().setAmazonSizeType(STAmazonAdSize.SIZE_600x90,
 				STAmazonAdSize.SIZE_320x50);
@@ -89,14 +105,29 @@ public class AppActivity extends BaseGameActivity {
 			STMopubAds.getInstance().setBannnerAdViewLayoutParams(
 					LayoutParams.MATCH_PARENT, 50,
 					Gravity.CENTER | Gravity.BOTTOM);
+		
+		//设置google play services是否可用
+		LeaderBoardManager.getInstance().setGPGisAvailable(STSystemFunction.getInstance().isSupportGoogle());
 	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onNewIntent(intent);
+		
+		if (STSystemFunction.getInstance().isSupportGoogle() == false) {
+			WeiboInstance.getInstance().handleRespone(intent);
+			WechatInstance.getInstance().handleRespone(intent);
+			Log.e("分享平台", "onNewIntent(Intent intent)");
+		}
+	}
+	
 	@Override
 	public int getPlatformCode() {
 		// TODO Auto-generated method stub
 		return PlatformCode.GOOGLEPLAY;
 	}
 
-	
 	@Override
 	protected void init_RateUs() {
 		// TODO Auto-generated method stub
@@ -119,90 +150,17 @@ public class AppActivity extends BaseGameActivity {
 	public void onSignInFailed() {
 		// TODO Auto-generated method stub
 		gpgAvailable = false;
+		LeaderBoardManager.getInstance().setGPGisLogined(false);
+		
 	}
 	@Override
 	public void onSignInSucceeded() {
 		// TODO Auto-generated method stub
 		gpgAvailable = true;
+		LeaderBoardManager.getInstance().setGPGisLogined(false);
 	}
-	
-   public void openLeaderboard(int leaderboardID){
-        currentID = leaderboardID;
-   }
-   
-   /*@brief This function opens the leaderboards ui for an leaderboard id*/
-   public void openLeaderboardUI(){
-       if(gpgAvailable){
-               ((AppActivity)currentContext).runOnUiThread(new Runnable() {
-           public void run() {
-               ((AppActivity)currentContext).startActivityForResult(Games.Leaderboards.getLeaderboardIntent(((AppActivity)currentContext).getGameHelper().getApiClient(), leaderboardIDs[currentID]),2);
-           }
-               });
-       }
-   }
-   
-   public boolean isGPGSupported(){
-       return gpgAvailable;
-   }
-   
-   /*@brief Submits a score to the leaderboard that is currently actvie*/
-   public void submitScoreToLeaderboard(int score)
-   {
-       if(gpgAvailable){
-       Games.Leaderboards.submitScore(((AppActivity)currentContext).getGameHelper().getApiClient(),leaderboardIDs[currentID],score);
-       }
-   }
-   
-   public void requestScoreFromLeaderboard()
-   {
-       if(gpgAvailable){
-           Games.Leaderboards.loadCurrentPlayerLeaderboardScore(((AppActivity)currentContext).getGameHelper().getApiClient(), leaderboardIDs[currentID], LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
-               @Override
-               public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
-                   if (scoreResult.getStatus().getStatusCode() == GamesStatusCodes.STATUS_OK) {
-                       currentScore = (int)scoreResult.getScore().getRawScore();
-                       callCppCallback(currentScore);
-                   }
-               }
-           });
-       }
-   }
 
-   public int collectScore()
-   {
-       return currentScore;
-   }
    
-    /*@brief Shows the achievements ui*/
-   public void showAchievements() {
-       if(gpgAvailable){
-       ((AppActivity)currentContext).runOnUiThread(new Runnable() {
-           public void run() {
-               ((AppActivity)currentContext).startActivityForResult(Games.Achievements.getAchievementsIntent(((AppActivity)currentContext).getGameHelper().getApiClient()), 5);
-           }
-       });
-       }
-   }
    
-   /*@brief Changes the actvie Achievement
-     @param The index of the achievement in the list*/
-   public void openAchievement(int achievementID){
-       currentAchievementID = achievementID;
-   }
-   
-   public void updateAchievement(int percentage){
-       if(gpgAvailable){
-      Games.Achievements.unlock(((AppActivity)currentContext).getGameHelper().getApiClient(), achievementIDs[currentAchievementID]);
-       }
-   }
-   
-   public void exitGame()
-   {
-       Intent intent = new Intent(currentContext, MainActivity.class);
-       MainActivity.exiting=true;
-       currentContext.startActivity(intent);
-   }
-   
-   public native void callCppCallback(int score);
-   public native void nativeInit();
+
 }
