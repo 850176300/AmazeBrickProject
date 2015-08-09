@@ -27,7 +27,7 @@ import com.common.android.jni.STSystemFunction;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.kekestudio.amazingcircle.AppActivity;
+import com.kekestudio.jumpcircle.AppActivity;
 
 /**
  * Example base class for games. This implementation takes care of setting up

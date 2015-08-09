@@ -9,9 +9,9 @@
     <string name="gamehelper_app_misconfigured">The application is incorrectly configured. Check that the package name and signing certificate match the client ID created in Developer Console. Also, if the application is not yet published, check that the account you are trying to sign in with is listed as a tester account. See logs for more information.</string>
     <string name="gamehelper_license_failed">License check failed.</string>
     <string name="gamehelper_unknown_error">Unknown error.</string>
-    <string name="app_id">839678905441</string>
-    <string name="leaderboard_up__up">CgkI4ZiNhrgYEAIQAQ</string>
-    <string name="event_up__up_achievement">CgkIv5Dmm-4BEAIQAQ</string>
+    <string name="app_id">633720537389</string>
+    <string name="achievement_achievement">CgkIrYLA5bgSEAIQAQ,CgkIrYLA5bgSEAIQAw,CgkIrYLA5bgSEAIQBA,CgkIrYLA5bgSEAIQBQ,CgkIrYLA5bgSEAIQBg</string>
+    <string name="leaderboard_up__up_leaderboard">CgkIrYLA5bgSEAIQAg</string>
     <string name="share_text">我在安卓手机玩#UP &amp; Up游戏已经跳过%1$d个障碍，快来一起玩吧！下载地址：http://www.wandoujia.com/apps/com.kekestudio.amazingcircle</string>
     <string name="action_settings">Settings</string>
     <string name="weibosdk_demo_token_to_string_format">Token：%1$s \nRefresh Token：%2$s \nexpires_in：%3$s</string>

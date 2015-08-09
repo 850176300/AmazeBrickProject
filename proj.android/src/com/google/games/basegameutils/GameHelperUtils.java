@@ -1,5 +1,8 @@
 package com.google.games.basegameutils;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -9,10 +12,7 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.games.GamesActivityResultCodes;
-import com.kekestudio.amazingcircle.*;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import com.kekestudio.jumpcircle.R;
 
 /**
  * Created by btco on 2/10/14.

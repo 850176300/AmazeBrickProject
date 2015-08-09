@@ -65,10 +65,10 @@ bool HomeScene::init(){
         STSystemFunction st;
         MenuItemSprite* rankBtn = CocosHelper::menuItemSprite("res/ui/rank.png");
         rankBtn->setTag(kRankBtn);
-        if (st.getIsSupportGoogle() == false) {
-            rankBtn = CocosHelper::menuItemSprite("res/ui/share.png");
-            rankBtn->setTag(kRankBtn);
-        }
+//        if (st.getIsSupportGoogle() == false) {
+//            rankBtn = CocosHelper::menuItemSprite("res/ui/share.png");
+//            rankBtn->setTag(kRankBtn);
+//        }
         rankBtn->setPosition(soundBtn->getPosition() + Vec2(-80/0.618-rankBtn->getContentSize().width/2.0, 0));
         
         rankBtn->setCallback(CC_CALLBACK_1(HomeScene::onButtonsClicked, this));

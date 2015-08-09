@@ -1,5 +1,9 @@
 package com.google.games.basegameutils;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
 import cn.afterwind.gamecenter.entity.BaseEntity;
 import cn.afterwind.gamecenter.until.Constants;
 import cn.afterwind.gamecenter.view.LeaderboardActivity;
@@ -9,19 +13,13 @@ import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.Leaderboards;
-import com.kekestudio.amazingcircle.R;
+import com.kekestudio.jumpcircle.R;
 import com.kelberos.develop.http.HttpResult;
 import com.kelberos.develop.http.NetWork;
 import com.kelberos.develop.http.TaskHandler;
 import com.kelberos.develop.superclass.ParentParameter;
 import com.kelberos.develop.utils.DateBaseSave;
 import com.kelberos.develop.utils.JsonUtil;
-
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
-import android.text.TextUtils;
 
 public class LeaderBoardManager {
 	private static LeaderBoardManager mInstance = null;
@@ -58,8 +56,8 @@ public class LeaderBoardManager {
 	
 	private LeaderBoardManager(Context context) {
 		currentContext = context;
-		String leaderboardIdsRaw = currentContext.getString(R.string.leaderboard_up__up);
-        String achievementIdsRaw = currentContext.getString(R.string.event_up__up_achievement);
+		String leaderboardIdsRaw = currentContext.getString(R.string.leaderboard_up__up_leaderboard);
+        String achievementIdsRaw = currentContext.getString(R.string.achievement_achievement);
         
         leaderboardIDs = leaderboardIdsRaw.split(";");
         achievementIDs =  achievementIdsRaw.split(";");
